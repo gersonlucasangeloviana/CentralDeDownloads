@@ -1,0 +1,4 @@
+Ambiente: worker local .NET 10, MongoDB, LocalStack, Aws__UploadPartMiB=5.
+JobId: f409ccb3fcc444c3a4fbddccae43f5fd
+Gerando f409ccb3fcc444c3a4fbddccae43f5fd em csv
+Arquivo f409ccb3fcc444c3a4fbddccae43f5fd pronto com 10368913 bytes em 2 partes; geracao_ms=390; upload_s3_ms=119

@@ -142,7 +142,7 @@ simple = [
             "Cria um CSV sem período nem notificações. Guarde o id capturado automaticamente."),
     request("02 Enviar lote único", "POST", "{{baseUrl}}/v1/arquivos/{{simpleJobId}}/lotes",
             batch_body("simple", None, simple_rows), batch_tests("simple", 1, 2),
-            "Dois pedidos planos. Não envie mais de 100 registros em um lote."),
+            "Dois pedidos planos. Não envie mais de 1000 registros em um lote ou 1 MiB no corpo."),
     request("03 Concluir com totais", "POST", "{{baseUrl}}/v1/arquivos/{{simpleJobId}}/concluir",
             {"totalLotes": 1, "totalItens": 2}, finish_tests(1, 2),
             "Conclui o envio. Totais divergentes causam falha permanente do trabalho."),

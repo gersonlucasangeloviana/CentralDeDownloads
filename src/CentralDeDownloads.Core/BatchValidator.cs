@@ -23,7 +23,7 @@ public static class BatchValidator
         if (!root.TryGetProperty("dados", out var data) || data.ValueKind != JsonValueKind.Array)
             throw new ArgumentException("dados deve ser um array.");
         var count = data.GetArrayLength();
-        if (count is < 1 or > 100) throw new ArgumentException("dados deve conter de 1 a 100 registros.");
+        if (count is < 1 or > 1000) throw new ArgumentException("dados deve conter de 1 a 1000 registros.");
 
         List<string> columns = [];
         var rowIndex = 0;

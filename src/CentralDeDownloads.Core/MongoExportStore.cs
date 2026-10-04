@@ -104,6 +104,7 @@ public sealed class MongoExportStore : IExportStore
                      Builders<ExportJob>.Filter.Eq(x => x.PendingBatches, 0);
         var update = mismatch is null
             ? Builders<ExportJob>.Update.Set(x => x.Status, JobStatus.Queued)
+                .Set(x => x.Format, ExportFormatPolicy.AfterClose(job.Format, job.ItemCount))
             : Builders<ExportJob>.Update.Set(x => x.Status, JobStatus.Failed).Set(x => x.Error, mismatch);
         var result = await _jobs.UpdateOneAsync(filter, update, cancellationToken: ct);
         if (result.ModifiedCount > 0 && mismatch is not null) await DeleteBatchesAsync(id, ct);

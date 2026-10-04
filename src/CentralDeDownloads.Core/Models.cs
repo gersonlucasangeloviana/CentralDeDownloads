@@ -18,6 +18,7 @@ public sealed class ExportJob
     [BsonId] public string Id { get; set; } = Guid.NewGuid().ToString("N");
     public string Name { get; set; } = "";
     public string Format { get; set; } = "";
+    public string? RequestedFormat { get; set; }
     public DateOnly? PeriodStart { get; set; }
     public DateOnly? PeriodEnd { get; set; }
     public string? Webhook { get; set; }
@@ -60,3 +61,11 @@ public sealed record CreateJobRequest(string Nome, string Formato, PeriodRequest
 public sealed record PeriodRequest(DateOnly Inicio, DateOnly Fim);
 public sealed record FinishRequest(long? TotalLotes, long? TotalItens);
 public sealed record BatchInput(string JobId, string? BatchId, string DataJson, int Count, List<string> Columns);
+
+public static class ExportFormatPolicy
+{
+    public const long MaximumXlsxItems = 1_000_000;
+
+    public static string AfterClose(string format, long itemCount) =>
+        format == "xlsx" && itemCount > MaximumXlsxItems ? "csv" : format;
+}

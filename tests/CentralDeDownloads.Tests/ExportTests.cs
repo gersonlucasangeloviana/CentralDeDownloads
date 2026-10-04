@@ -11,12 +11,21 @@ namespace CentralDeDownloads.Tests;
 public class ExportTests
 {
     [Fact]
-    public void BatchRejectsMoreThanOneHundredItems()
+    public void BatchAcceptsOneThousandAndRejectsMore()
     {
-        var body = Encoding.UTF8.GetBytes("{\"id\":\"a\",\"dados\":[" +
-            string.Join(',', Enumerable.Repeat("{\"x\":1}", 101)) + "]}");
-        Assert.Throws<ArgumentException>(() => BatchValidator.Parse("a", body));
+        static byte[] Body(int count) => Encoding.UTF8.GetBytes("{\"id\":\"a\",\"dados\":[" +
+            string.Join(',', Enumerable.Repeat("{\"x\":1}", count)) + "]}");
+        Assert.Equal(1000, BatchValidator.Parse("a", Body(1000)).Count);
+        Assert.Throws<ArgumentException>(() => BatchValidator.Parse("a", Body(1001)));
     }
+
+    [Theory]
+    [InlineData("xlsx", 1_000_000, "xlsx")]
+    [InlineData("xlsx", 1_000_001, "csv")]
+    [InlineData("csv", 1_000_001, "csv")]
+    [InlineData("json", 1_000_001, "json")]
+    public void LargeXlsxBecomesCsv(string requested, long items, string expected) =>
+        Assert.Equal(expected, ExportFormatPolicy.AfterClose(requested, items));
 
     [Fact]
     public void BatchRejectsNestedValuesAndPreservesColumnOrder()
@@ -72,6 +81,44 @@ public class ExportTests
             }
         }
         finally { File.Delete(path); }
+    }
+
+    [Theory]
+    [InlineData("csv")]
+    [InlineData("json")]
+    [InlineData("xlsx")]
+    public async Task WritesToNonSeekableStream(string format)
+    {
+        using var data = new MemoryStream();
+        using var output = new NonSeekableOutput(data);
+        await ExportFileWriter.WriteAsync(new ExportJob { Format = format, Columns = ["Pedido", "Texto"] },
+            Batches(), output, CancellationToken.None);
+        Assert.True(data.Length > 0);
+        if (format == "xlsx")
+        {
+            using var xlsx = SpreadsheetDocument.Open(new MemoryStream(data.ToArray()), false);
+            Assert.Single(xlsx.WorkbookPart!.Workbook!.Sheets!.Elements<Sheet>());
+        }
+        else if (format == "json") Assert.Equal(2, JsonDocument.Parse(data.ToArray()).RootElement.GetArrayLength());
+        else Assert.Contains("Pedido;Texto", Encoding.UTF8.GetString(data.ToArray()));
+    }
+
+    private sealed class NonSeekableOutput(MemoryStream inner) : Stream
+    {
+        public override bool CanRead => false;
+        public override bool CanSeek => false;
+        public override bool CanWrite => true;
+        public override long Length => throw new NotSupportedException();
+        public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
+        public override void Flush() => inner.Flush();
+        public override Task FlushAsync(CancellationToken ct) => inner.FlushAsync(ct);
+        public override void Write(byte[] buffer, int offset, int count) => inner.Write(buffer, offset, count);
+        public override void Write(ReadOnlySpan<byte> buffer) => inner.Write(buffer);
+        public override ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken ct = default) =>
+            inner.WriteAsync(buffer, ct);
+        public override int Read(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+        public override void SetLength(long value) => throw new NotSupportedException();
     }
 
     [Fact]

@@ -89,7 +89,7 @@ _, job = call("POST", "/v1/arquivos", {"nome": "Smoke erro", "formato": "csv"})
 job_id = job["id"]
 status, _ = call("POST", f"/v1/arquivos/{job_id}/lotes", {"id": job_id, "dados": [{"a": [1]}]})
 assert status == 400
-status, _ = call("POST", f"/v1/arquivos/{job_id}/lotes", {"id": job_id, "dados": [{"a": n} for n in range(101)]})
+status, _ = call("POST", f"/v1/arquivos/{job_id}/lotes", {"id": job_id, "dados": [{"a": n} for n in range(1001)]})
 assert status == 400
 call("POST", f"/v1/arquivos/{job_id}/lotes", {"id": job_id, "dados": [{"a": "ok"}]})
 status, state = call("POST", f"/v1/arquivos/{job_id}/concluir", {"totalLotes": 2})

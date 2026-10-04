@@ -63,6 +63,7 @@ internal static class ApiOpenApi
                 operation.Summary = "1. Criar solicitação de arquivo";
                 operation.Description = "Informe nome e formato. Período, webhook e e-mail são opcionais. " +
                     "O formato aceita xlsx, csv ou json (sem o ponto da extensão). " +
+                    "XLSX com mais de 1.000.000 registros é convertido para CSV após concluir. " +
                     "Selecione um dos exemplos do corpo para ver cada formato e a combinação de campos opcionais. " +
                     "Se informar webhook e e-mail, ambos receberão uma notificação quando o trabalho terminar " +
                     "(com sucesso ou falha). Guarde o id devolvido para enviar os lotes. " +
@@ -72,9 +73,9 @@ internal static class ApiOpenApi
                     ("xlsx", "Planilha XLSX: campos obrigatórios", """{"nome":"Vendas de setembro","formato":"xlsx"}"""),
                     ("csv", "Arquivo CSV: campos obrigatórios", """{"nome":"Vendas de setembro","formato":"csv"}"""),
                     ("json", "Arquivo JSON: campos obrigatórios", """{"nome":"Vendas de setembro","formato":"json"}"""),
-                    ("completo", "XLSX com período e notificações", """{"nome":"Vendas de setembro","formato":"xlsx","periodo":{"inicio":"2026-09-01","fim":"2026-09-30"},"webhook":"https://seu-dominio-publico.com/arquivo","email":"pessoa@seu-dominio.com"}"""));
+                    ("completo", "XLSX com período e notificações", """{"nome":"Vendas de setembro","formato":"xlsx","formatoSolicitado":"xlsx","periodo":{"inicio":"2026-09-01","fim":"2026-09-30"},"webhook":"https://seu-dominio-publico.com/arquivo","email":"pessoa@seu-dominio.com"}"""));
                 SetResponse(operation, "201", "Solicitação criada. Use id nas próximas chamadas.",
-                    """{"id":"c0ffee1234567890c0ffee1234567890","nome":"Vendas de setembro","formato":"xlsx","periodo":null,"status":"recebendo","totalLotes":0,"totalItens":0,"criadoEm":"2026-09-30T12:00:00Z","fechadoEm":null,"iniciadoEm":null,"prontoEm":null,"expiraEm":null,"tamanhoBytes":null,"erro":null,"linkDownload":null}""");
+                    """{"id":"c0ffee1234567890c0ffee1234567890","nome":"Vendas de setembro","formato":"xlsx","formatoSolicitado":"xlsx","periodo":null,"status":"recebendo","totalLotes":0,"totalItens":0,"criadoEm":"2026-09-30T12:00:00Z","fechadoEm":null,"iniciadoEm":null,"prontoEm":null,"expiraEm":null,"tamanhoBytes":null,"erro":null,"linkDownload":null}""");
                 SetResponse(operation, "400", "Nome, formato, período, webhook ou e-mail inválido.", """{"erro":"Nome ou formato inválido."}""");
                 SetResponse(operation, "503", "Notificação por e-mail solicitada sem configuração do Resend.", """{"erro":"Notificação por e-mail indisponível."}""");
                 break;
@@ -83,20 +84,20 @@ internal static class ApiOpenApi
                 operation.OperationId = "EnviarLote";
                 operation.Summary = "2. Enviar lote de registros";
                 operation.Description = "Substitua o id da rota e do JSON pelo id recebido na criação; os dois devem ser iguais. " +
-                    "dados deve ter de 1 a 100 objetos planos, com até 256 campos por objeto. Cada valor pode ser " +
+                    "dados deve ter de 1 a 1000 objetos planos, com até 256 campos por objeto. Cada valor pode ser " +
                     "texto, número ou booleano; não envie null, objetos ou arrays internos (use texto vazio para " +
                     "campos sem valor). O corpo inteiro tem limite de 1 MiB. A primeira linha do primeiro lote " +
                     "admitido define as colunas e sua ordem. Aguarde a resposta de todos os lotes, inclusive " +
                     "os enviados em paralelo, antes de concluir. idLote é opcional e não impede duplicações. " +
                     "Use o mesmo corpo nos três formatos de saída; o formato foi definido na criação.";
                 DescribeParameter(operation, "id", "Id devolvido em POST /v1/arquivos. Deve ser igual ao campo id do corpo.");
-                SetBody(operation, true, "id obrigatório e igual ao parâmetro da rota; idLote opcional; dados obrigatório (1–100 registros).", BatchSchema(),
+                SetBody(operation, true, "id obrigatório e igual ao parâmetro da rota; idLote opcional; dados obrigatório (1–1000 registros).", BatchSchema(),
                     ("minimo", "Um registro, sem idLote", """{"id":"c0ffee1234567890c0ffee1234567890","dados":[{"Pedido":"123"}]}"""),
                     ("pedidos", "Dois registros com texto, número e booleano", """{"id":"c0ffee1234567890c0ffee1234567890","idLote":"lote-001","dados":[{"Pedido":"123","Cliente":"Ana","Valor":149.90,"Pago":true},{"Pedido":"124","Cliente":"Bia","Valor":250.00,"Pago":false}]}"""),
                     ("sem-valor", "Campo sem conteúdo: string vazia", """{"id":"c0ffee1234567890c0ffee1234567890","dados":[{"Pedido":"125","Observacao":"","Valor":0},{"Pedido":"126","Observacao":"","Valor":20.5}]}"""));
                 SetResponse(operation, "202", "Lote admitido; sequencia é atribuída pelo servidor e pode diferir de idLote.",
                     """{"id":"c0ffee1234567890c0ffee1234567890","idLote":"lote-001","sequencia":1,"totalItens":2}""");
-                SetResponse(operation, "400", "JSON inválido, id divergente, mais de 100 registros ou valores complexos/null.",
+                SetResponse(operation, "400", "JSON inválido, id divergente, mais de 1000 registros ou valores complexos/null.",
                     """{"erro":"dados[0].Itens deve ser um valor simples."}""");
                 SetResponse(operation, "409", "O arquivo não existe ou já foi encerrado.", """{"erro":"Arquivo inexistente ou encerrado."}""");
                 SetResponse(operation, "413", "Corpo maior que 1 MiB.", """{"erro":"Lote excede 1 MiB."}""");
@@ -115,11 +116,11 @@ internal static class ApiOpenApi
                     ("apenas-itens", "Conferir somente os registros", """{"totalItens":150}"""),
                     ("sem-conferencia", "Sem totais: objeto vazio", "{}"));
                 SetResponse(operation, "202", "Conclusão aceita; consulte o status até pronto ou falhou.",
-                    """{"id":"c0ffee1234567890c0ffee1234567890","nome":"Vendas de setembro","formato":"xlsx","periodo":null,"status":"na_fila","totalLotes":2,"totalItens":150,"criadoEm":"2026-09-30T12:00:00Z","fechadoEm":"2026-09-30T12:01:00Z","iniciadoEm":null,"prontoEm":null,"expiraEm":null,"tamanhoBytes":null,"erro":null,"linkDownload":null}""");
+                    """{"id":"c0ffee1234567890c0ffee1234567890","nome":"Vendas de setembro","formato":"xlsx","formatoSolicitado":"xlsx","periodo":null,"status":"na_fila","totalLotes":2,"totalItens":150,"criadoEm":"2026-09-30T12:00:00Z","fechadoEm":"2026-09-30T12:01:00Z","iniciadoEm":null,"prontoEm":null,"expiraEm":null,"tamanhoBytes":null,"erro":null,"linkDownload":null}""");
                 SetResponse(operation, "400", "Corpo inválido, maior que 2 KiB ou totais negativos.", """{"erro":"Totais não podem ser negativos."}""");
                 SetResponse(operation, "404", "Arquivo não encontrado.");
                 SetResponse(operation, "422", "Sem lotes ou totais divergentes; arquivo marcado como falhou e lotes descartados.",
-                    """{"id":"c0ffee1234567890c0ffee1234567890","nome":"Vendas de setembro","formato":"xlsx","periodo":null,"status":"falhou","totalLotes":2,"totalItens":150,"criadoEm":"2026-09-30T12:00:00Z","fechadoEm":"2026-09-30T12:01:00Z","iniciadoEm":null,"prontoEm":null,"expiraEm":null,"tamanhoBytes":null,"erro":"Total de itens divergente.","linkDownload":null}""");
+                    """{"id":"c0ffee1234567890c0ffee1234567890","nome":"Vendas de setembro","formato":"xlsx","formatoSolicitado":"xlsx","periodo":null,"status":"falhou","totalLotes":2,"totalItens":150,"criadoEm":"2026-09-30T12:00:00Z","fechadoEm":"2026-09-30T12:01:00Z","iniciadoEm":null,"prontoEm":null,"expiraEm":null,"tamanhoBytes":null,"erro":"Total de itens divergente.","linkDownload":null}""");
                 break;
 
             case ("GET", "v1/arquivos/{id}"):
@@ -132,9 +133,9 @@ internal static class ApiOpenApi
                     "Repita esta consulta até pronto ou falhou. Escolha um exemplo de resposta para ver cada estado.";
                 DescribeParameter(operation, "id", "Id devolvido em POST /v1/arquivos.");
                 SetResponseExamples(operation, "200", "Estado atual, contagens, mensagem de erro e link quando pronto.",
-                    ("recebendo", "Aguardando lotes", """{"id":"c0ffee1234567890c0ffee1234567890","nome":"Vendas de setembro","formato":"xlsx","periodo":null,"status":"recebendo","totalLotes":1,"totalItens":2,"criadoEm":"2026-09-30T12:00:00Z","fechadoEm":null,"iniciadoEm":null,"prontoEm":null,"expiraEm":null,"tamanhoBytes":null,"erro":null,"linkDownload":null}"""),
-                    ("pronto", "Arquivo pronto para download", """{"id":"c0ffee1234567890c0ffee1234567890","nome":"Vendas de setembro","formato":"xlsx","periodo":null,"status":"pronto","totalLotes":2,"totalItens":150,"criadoEm":"2026-09-30T12:00:00Z","fechadoEm":"2026-09-30T12:01:00Z","iniciadoEm":"2026-09-30T12:01:02Z","prontoEm":"2026-09-30T12:01:10Z","expiraEm":"2026-10-01T12:01:10Z","tamanhoBytes":10240,"erro":null,"linkDownload":"https://api.exemplo.com/v1/downloads/TOKEN"}"""),
-                    ("falhou", "Geração ou conferência falhou", """{"id":"c0ffee1234567890c0ffee1234567890","nome":"Vendas de setembro","formato":"xlsx","periodo":null,"status":"falhou","totalLotes":2,"totalItens":150,"criadoEm":"2026-09-30T12:00:00Z","fechadoEm":"2026-09-30T12:01:00Z","iniciadoEm":null,"prontoEm":null,"expiraEm":null,"tamanhoBytes":null,"erro":"Total de itens divergente.","linkDownload":null}"""));
+                    ("recebendo", "Aguardando lotes", """{"id":"c0ffee1234567890c0ffee1234567890","nome":"Vendas de setembro","formato":"xlsx","formatoSolicitado":"xlsx","periodo":null,"status":"recebendo","totalLotes":1,"totalItens":2,"criadoEm":"2026-09-30T12:00:00Z","fechadoEm":null,"iniciadoEm":null,"prontoEm":null,"expiraEm":null,"tamanhoBytes":null,"erro":null,"linkDownload":null}"""),
+                    ("pronto", "Arquivo pronto para download", """{"id":"c0ffee1234567890c0ffee1234567890","nome":"Vendas de setembro","formato":"xlsx","formatoSolicitado":"xlsx","periodo":null,"status":"pronto","totalLotes":2,"totalItens":150,"criadoEm":"2026-09-30T12:00:00Z","fechadoEm":"2026-09-30T12:01:00Z","iniciadoEm":"2026-09-30T12:01:02Z","prontoEm":"2026-09-30T12:01:10Z","expiraEm":"2026-10-01T12:01:10Z","tamanhoBytes":10240,"erro":null,"linkDownload":"https://api.exemplo.com/v1/downloads/TOKEN"}"""),
+                    ("falhou", "Geração ou conferência falhou", """{"id":"c0ffee1234567890c0ffee1234567890","nome":"Vendas de setembro","formato":"xlsx","formatoSolicitado":"xlsx","periodo":null,"status":"falhou","totalLotes":2,"totalItens":150,"criadoEm":"2026-09-30T12:00:00Z","fechadoEm":"2026-09-30T12:01:00Z","iniciadoEm":null,"prontoEm":null,"expiraEm":null,"tamanhoBytes":null,"erro":"Total de itens divergente.","linkDownload":null}"""));
                 SetResponse(operation, "404", "Arquivo não encontrado.");
                 break;
 
@@ -149,7 +150,7 @@ internal static class ApiOpenApi
                 DescribeParameter(operation, "size", "Itens por página. Valores fora de 1–100 são ajustados; padrão: 30.");
                 DescribeParameter(operation, "status", "Filtro opcional: recebendo, fechando, na_fila, processando, pronto, falhou ou expirou.");
                 SetResponseExamples(operation, "200", "Página de arquivos. Consulte cada id para obter um link atual.",
-                    ("com-resultados", "Página com um arquivo", """{"pagina":1,"tamanho":30,"arquivos":[{"id":"c0ffee1234567890c0ffee1234567890","nome":"Vendas de setembro","formato":"xlsx","periodo":null,"status":"pronto","totalLotes":2,"totalItens":150,"criadoEm":"2026-09-30T12:00:00Z","fechadoEm":"2026-09-30T12:01:00Z","iniciadoEm":"2026-09-30T12:01:02Z","prontoEm":"2026-09-30T12:01:10Z","expiraEm":"2026-10-01T12:01:10Z","tamanhoBytes":10240,"erro":null,"linkDownload":null}]}"""),
+                    ("com-resultados", "Página com um arquivo", """{"pagina":1,"tamanho":30,"arquivos":[{"id":"c0ffee1234567890c0ffee1234567890","nome":"Vendas de setembro","formato":"xlsx","formatoSolicitado":"xlsx","periodo":null,"status":"pronto","totalLotes":2,"totalItens":150,"criadoEm":"2026-09-30T12:00:00Z","fechadoEm":"2026-09-30T12:01:00Z","iniciadoEm":"2026-09-30T12:01:02Z","prontoEm":"2026-09-30T12:01:10Z","expiraEm":"2026-10-01T12:01:10Z","tamanhoBytes":10240,"erro":null,"linkDownload":null}]}"""),
                     ("vazio", "Página sem resultados", """{"pagina":1,"tamanho":30,"arquivos":[]}"""));
                 break;
 
@@ -324,8 +325,8 @@ internal static class ApiOpenApi
             {
                 Type = JsonSchemaType.Array,
                 MinItems = 1,
-                MaxItems = 100,
-                Description = "De 1 a 100 registros. O corpo completo da requisição tem limite de 1 MiB.",
+                MaxItems = 1000,
+                Description = "De 1 a 1000 registros. O corpo completo da requisição tem limite de 1 MiB.",
                 Items = new OpenApiSchema
                 {
                     Type = JsonSchemaType.Object,

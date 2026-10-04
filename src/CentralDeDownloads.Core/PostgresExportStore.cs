@@ -151,7 +151,11 @@ public sealed class PostgresExportStore : IExportStore, IDisposable
             var mismatch = job.BatchCount == 0 ? "Arquivo sem lotes." :
                 job.ExpectedBatches is not null && job.ExpectedBatches != job.BatchCount ? "Total de lotes divergente." :
                 job.ExpectedItems is not null && job.ExpectedItems != job.ItemCount ? "Total de itens divergente." : null;
-            if (mismatch is null) job.Status = JobStatus.Queued;
+            if (mismatch is null)
+            {
+                job.Status = JobStatus.Queued;
+                job.Format = ExportFormatPolicy.AfterClose(job.Format, job.ItemCount);
+            }
             else
             {
                 job.Status = JobStatus.Failed;

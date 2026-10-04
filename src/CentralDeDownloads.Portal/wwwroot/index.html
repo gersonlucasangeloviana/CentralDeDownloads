@@ -34,13 +34,22 @@
     const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     const date=s=>s?new Date(s).toLocaleString('pt-BR'):'—';
     const period=p=>p?.inicio?`${esc(p.inicio)} a ${esc(p.fim)}`:'—';
+    async function apiJson(url){
+      const res=await fetch(url,{headers:{Accept:'application/json'}});
+      if(res.headers.get('X-Portal-Session-Expired')==='1'||(res.redirected&&new URL(res.url).pathname==='/login')){
+        window.location.replace('/login?expirada=1');
+        return null;
+      }
+      if(!res.ok)throw new Error(`Falha HTTP ${res.status}`);
+      try{return await res.json();}catch{throw new Error('Resposta inesperada do servidor. Tente novamente.');}
+    }
     async function load(){
       message.textContent='Carregando...';
       try{
         const status=document.querySelector('#status').value;
-        const res=await fetch(`/api/files?page=${page}&size=30&status=${encodeURIComponent(status)}`);
-        if(!res.ok)throw new Error(`Falha HTTP ${res.status}`);
-        const data=await res.json();lastCount=data.arquivos.length;
+        const data=await apiJson(`/api/files?page=${page}&size=30&status=${encodeURIComponent(status)}`);
+        if(!data)return;
+        lastCount=data.arquivos.length;
         rows.innerHTML=data.arquivos.map(f=>`<tr><td>${esc(f.nome)}</td><td>${period(f.periodo)}</td><td>${esc(f.formato)}</td><td class="status ${esc(f.status)}">${esc(f.status)}</td><td>${f.totalItens??0}</td><td>${date(f.criadoEm)}</td><td><button data-id="${esc(f.id)}">Detalhes</button> ${f.status==='pronto'?`<a href="/api/files/${encodeURIComponent(f.id)}/download">Baixar</a>`:''}</td></tr>`).join('')||'<tr><td colspan="7">Nenhum arquivo encontrado.</td></tr>';
         document.querySelector('#pageLabel').textContent=`Página ${page}`;
         message.textContent='';
@@ -48,9 +57,10 @@
     }
     rows.addEventListener('click',async e=>{
       const id=e.target.dataset.id;if(!id)return;
-      const res=await fetch(`/api/files/${encodeURIComponent(id)}`);if(!res.ok){message.textContent='Não foi possível carregar os detalhes.';return;}
-      const f=await res.json();
-      const fields=[['Nome',f.nome],['Formato',f.formato],['Status',f.status],['Período',f.periodo?.inicio?`${f.periodo.inicio} a ${f.periodo.fim}`:'—'],['Lotes',f.totalLotes],['Registros',f.totalItens],['Criado em',date(f.criadoEm)],['Pronto em',date(f.prontoEm)],['Expira em',date(f.expiraEm)],['Tamanho',f.tamanhoBytes?`${(f.tamanhoBytes/1048576).toFixed(2)} MiB`:'—'],['Erro',f.erro||'—']];
+      let f;
+      try{f=await apiJson(`/api/files/${encodeURIComponent(id)}`);}catch{message.textContent='Não foi possível carregar os detalhes.';return;}
+      if(!f)return;
+      const fields=[['Nome',f.nome],['Formato',f.formato],...(f.formatoSolicitado&&f.formatoSolicitado!==f.formato?[['Formato solicitado',f.formatoSolicitado]]:[]),['Status',f.status],['Período',f.periodo?.inicio?`${f.periodo.inicio} a ${f.periodo.fim}`:'—'],['Lotes',f.totalLotes],['Registros',f.totalItens],['Criado em',date(f.criadoEm)],['Pronto em',date(f.prontoEm)],['Expira em',date(f.expiraEm)],['Tamanho',f.tamanhoBytes?`${(f.tamanhoBytes/1048576).toFixed(2)} MiB`:'—'],['Erro',f.erro||'—']];
       document.querySelector('#detailList').innerHTML=fields.map(([k,v])=>`<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('');
       document.querySelector('#details').showModal();
     });

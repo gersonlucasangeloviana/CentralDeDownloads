@@ -13,6 +13,7 @@ public static class JobPresentation
         id = job.Id,
         nome = job.Name,
         formato = job.Format,
+        formatoSolicitado = job.RequestedFormat ?? job.Format,
         periodo = job.PeriodStart is null ? null : new { inicio = job.PeriodStart, fim = job.PeriodEnd },
         status = job.Status,
         totalLotes = job.BatchCount,
@@ -74,8 +75,11 @@ public sealed class NotificationSender(string? resendApiKey, string? emailFrom,
                     using var request = new HttpRequestMessage(HttpMethod.Post, "https://api.resend.com/emails");
                     request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", resendApiKey);
                     var subject = job.Status == JobStatus.Ready ? $"Arquivo pronto: {job.Name}" : $"Falha no arquivo: {job.Name}";
+                    var conversion = job.RequestedFormat is not null && job.RequestedFormat != job.Format
+                        ? $" O formato solicitado ({job.RequestedFormat}) foi convertido para {job.Format} por superar 1 milhão de registros."
+                        : "";
                     var body = job.Status == JobStatus.Ready
-                        ? $"O arquivo {job.Name} está pronto. Link: {link}"
+                        ? $"O arquivo {job.Name} está pronto em {job.Format}.{conversion} Link: {link}"
                         : $"O arquivo {job.Name} falhou. Motivo: {job.Error}";
                     request.Content = JsonContent.Create(new { from = emailFrom, to = new[] { job.Email }, subject, text = body });
                     using var response = await ResendClient.SendAsync(request,

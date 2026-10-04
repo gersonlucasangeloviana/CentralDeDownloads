@@ -12,7 +12,7 @@ Uma API recebe dados JSON em lotes, gera arquivos XLSX, CSV ou JSON após uma ch
 - ASP.NET Core Minimal API em .NET, frontend e backend separados, publicados em ECS. Na primeira implantação de testes: **uma task da API e uma task do gerador**, sem configurar escala automática. O portal pode ter implantação própria.
 - Cerca de **400 arquivos por dia**, incluindo aproximadamente 100 nas primeiras horas da manhã. Algumas gerações podem ocorrer em paralelo. Arquivos podem chegar a **200 MB** e planilhas a **um milhão de linhas ou mais**.
 - A criação retorna um ID. Recebe `formato`, `nome` obrigatório, `periodo` opcional, `webhook` opcional e `email` opcional. O Resend é o provedor desejado para e-mail.
-- O corpo de cada lote contém ID do arquivo, `idLote` opcional e `dados` com **1 a 100 registros**. Acima de 100: erro sem gravação do lote. Lotes podem chegar em paralelo; não se promete a ordem original do cliente nessa situação.
+- O corpo de cada lote contém ID do arquivo, `idLote` opcional e `dados` com **1 a 1000 registros**. Acima de 1000: erro sem gravação do lote. Lotes podem chegar em paralelo; não se promete a ordem original do cliente nessa situação.
 - Cada registro é um objeto JSON plano para uma linha da tabela. Arrays ou objetos aninhados são rejeitados na própria requisição, inclusive no primeiro lote. O cliente deve enviar a mesma estrutura em todos os registros, com campos presentes e valor vazio quando aplicável.
 - As colunas são definidas pela ordem dos campos do primeiro registro do primeiro lote aceito. A V1 **não compara o conjunto de campos entre lotes**; essa verificação é débito técnico explícito.
 - Uma chamada final pode vir sem totais ou com totais esperados de registros e/ou lotes. Divergência fecha o trabalho em erro, apaga os dados temporários e exige nova solicitação e novo envio.
@@ -42,7 +42,7 @@ flowchart LR
 
 **Responsabilidades:** a API cria trabalhos, valida e persiste lotes, conclui a ingestão e consulta status. O gerador consome IDs da fila, lê os lotes em fluxo, gera o formato pedido, grava o objeto S3 e atualiza o estado. Notificações são disparadas depois de o estado final estar persistido; sua falha não converte um arquivo pronto em falha de geração. A fila contém apenas o ID, nunca a carga dos lotes. O SQS pode entregar mensagens duplicadas; RabbitMQ também pode reenviá-las quando uma confirmação de consumo não chega. O worker protege a transição de estado contra execução duplicada mesmo que a V1 não ofereça retry funcional. A publicação RabbitMQ usa fila/mensagem duráveis e confirmação do broker. [SQS padrão](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/standard-queues.html), [confirmações RabbitMQ](https://www.rabbitmq.com/tutorials/tutorial-seven-dotnet).
 
-**Armazenamento temporário da V1:** os lotes ficam no banco selecionado por `Storage:Provider`. MongoDB usa as coleções `arquivos` e `lotes`; PostgreSQL usa as tabelas `export_jobs` e `export_batches` com dados JSONB. A troca do provedor não migra dados anteriores. Se for usado o plano gratuito do Atlas, dados mais índices estão sujeitos a uma cota de armazenamento; o JSON bruto pode ocupar mais espaço que o XLSX final. Um milhão de registros em lotes de 100 implica pelo menos 10 mil chamadas HTTP e registros de lote. Medir capacidade e latência no provedor escolhido antes dessa carga. S3 temporário permanece como alternativa de evolução. [Limites do Atlas](https://www.mongodb.com/docs/atlas/manage-clusters/), [quota rígida](https://www.mongodb.com/docs/atlas/reference/faq/storage/).
+**Armazenamento temporário da V1:** os lotes ficam no banco selecionado por `Storage:Provider`. MongoDB usa as coleções `arquivos` e `lotes`; PostgreSQL usa as tabelas `export_jobs` e `export_batches` com dados JSONB. A troca do provedor não migra dados anteriores. Se for usado o plano gratuito do Atlas, dados mais índices estão sujeitos a uma cota de armazenamento; o JSON bruto pode ocupar mais espaço que o XLSX final. Um milhão de registros em lotes de 1000 implica ao menos mil chamadas HTTP e registros de lote, se cada corpo couber em 1 MiB. Medir capacidade e latência no provedor escolhido antes dessa carga. S3 temporário permanece como alternativa de evolução. [Limites do Atlas](https://www.mongodb.com/docs/atlas/manage-clusters/), [quota rígida](https://www.mongodb.com/docs/atlas/reference/faq/storage/).
 
 **Deploy inicial:** uma task sempre ativa para API e outra para gerador. Isso limita o gerador a uma geração de cada vez até aferir CPU, RAM e disco; várias solicitações simultâneas ficam na fila. O serviço de gerador já nasce isolado para permitir aumentar o número de tasks mais tarde. Com SQS, o backlog pode alimentar a escala do ECS; com RabbitMQ, será necessária métrica de backlog do broker. [Escala ECS por SQS](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-autoscaling-queue.html).
 
@@ -79,7 +79,7 @@ flowchart LR
 }
 ```
 
-A API rejeita o lote inteiro se `id` não corresponder à rota, `dados` não for array com 1 a 100 objetos, algum valor contiver objeto/array, o corpo exceder o limite técnico de bytes ou o trabalho não estiver em `recebendo`. `idLote` fica registrado para rastreamento, **sem deduplicação garantida na V1**. O servidor pode devolver uma sequência incremental de admissão; ela não reconstitui a ordem do cliente quando as chamadas são paralelas. Um retry HTTP do mesmo lote pode duplicar linhas na V1.
+A API rejeita o lote inteiro se `id` não corresponder à rota, `dados` não for array com 1 a 1000 objetos, algum valor contiver objeto/array, o corpo exceder o limite técnico de bytes ou o trabalho não estiver em `recebendo`. `idLote` fica registrado para rastreamento, **sem deduplicação garantida na V1**. O servidor pode devolver uma sequência incremental de admissão; ela não reconstitui a ordem do cliente quando as chamadas são paralelas. Um retry HTTP do mesmo lote pode duplicar linhas na V1.
 
 ### Concluir, consultar e baixar
 
@@ -94,7 +94,7 @@ A API rejeita o lote inteiro se `id` não corresponder à rota, `dados` não for
 
 **Trabalhos (`arquivos` ou `export_jobs`):** `id`, nome, período opcional, formato, webhook opcional, e-mail opcional, status, colunas, contagens, `criadoEm`, `ultimaAtividadeEm`, `fechadoEm`, `inicioProcessamentoEm`, `prontoEm`, `expiraEm`, `erro`, chave/tamanho S3 e estado de notificação. O histórico de trabalhos finalizados é removido após 30 dias contados de `criadoEm`.
 
-**Lotes (`lotes` ou `export_batches`):** `idArquivo`, sequência de admissão, `idLote` opcional, `recebidoEm` UTC, quantidade e JSON dos dados. O `recebidoEm` solicitado fica em cada lote; a regra de abandono usa `ultimaAtividadeEm` do arquivo. A implementação limita cada requisição a **1 MiB** e 100 itens. No PostgreSQL, cada admissão é transacional e bloqueia a linha do trabalho para definir sequência, cabeçalho e contagens com segurança. [Limite BSON do MongoDB](https://www.mongodb.com/docs/manual/core/document/).
+**Lotes (`lotes` ou `export_batches`):** `idArquivo`, sequência de admissão, `idLote` opcional, `recebidoEm` UTC, quantidade e JSON dos dados. O `recebidoEm` solicitado fica em cada lote; a regra de abandono usa `ultimaAtividadeEm` do arquivo. A implementação limita cada requisição a **1 MiB** e 1000 itens. No PostgreSQL, cada admissão é transacional e bloqueia a linha do trabalho para definir sequência, cabeçalho e contagens com segurança. [Limite BSON do MongoDB](https://www.mongodb.com/docs/manual/core/document/).
 
 **Limpeza:**
 
@@ -109,7 +109,7 @@ O processo de limpeza nunca apaga lotes de um trabalho `na_fila` ou `processando
 ## 6. Regras dos formatos
 
 - **Comum:** cada item é um objeto plano; objetos, arrays internos e `null` são rejeitados na V1. Valores sem conteúdo devem vir como strings vazias. O primeiro registro do primeiro lote **admitido** estabelece os nomes e a ordem das colunas. Todos os lotes são validados quanto à estrutura plana, mas a V1 confia que as mesmas colunas estarão presentes em todos eles.
-- **XLSX:** todas as células de dados são texto; o cabeçalho fica em negrito. A cada aba cabem 1.048.576 linhas, incluindo o cabeçalho; ao completar 1.048.575 registros, abrir nova aba e repetir o cabeçalho. Também há limites de 16.384 colunas e 32.767 caracteres por célula. É obrigatória uma biblioteca/modo de escrita incremental; tamanho e tempo de geração serão medidos com 200 MB e mais de um milhão de linhas. [Limites do Excel](https://support.microsoft.com/pt-br/excel/excel-specifications-and-limits).
+- **XLSX:** todas as células de dados são texto; o cabeçalho fica em negrito. A cada aba cabem 1.048.576 linhas, incluindo o cabeçalho; acima de 1 milhão de registros, a API converte a saída para CSV ao concluir. Também há limites de 16.384 colunas e 32.767 caracteres por célula. É obrigatória uma biblioteca/modo de escrita incremental; tamanho e tempo de geração serão medidos com 200 MB e mais de um milhão de linhas. [Limites do Excel](https://support.microsoft.com/pt-br/excel/excel-specifications-and-limits).
 - **CSV:** uma linha de cabeçalho, separador `;`, escape correto de aspas/quebras de linha, escrita incremental e codificação UTF-8 com BOM. Proteger células que começam com caracteres interpretáveis como fórmula ao abrir no Excel.
 - **JSON:** um único array JSON (`[ {...}, {...} ]`), escrito em fluxo para não carregar tudo em memória.
 
@@ -132,7 +132,7 @@ Quando o trabalho chega a `pronto` ou `falhou`, consultar os destinos informados
 - Criar imagens pequenas .NET 10 LTS, executar sem root e separar configuração/segredos do código. [Contêineres .NET](https://learn.microsoft.com/en-us/dotnet/core/docker/).
 - Limitar memória, CPU, tamanho HTTP e disco temporário da task. Uma geração por worker na V1; solicitações adicionais ficam na fila.
 - Registrar métricas de lotes/bytes, arquivos na fila, idade da fila, tempo e pico de memória por formato/tamanho, falhas de geração e de notificação, capacidade do banco escolhido, objetos temporários e exclusões.
-- O prazo de 30 minutos exige medição real do XLSX grande em task com recursos definidos. O caso de um milhão de linhas em lotes de 100 implica ao menos 10 mil chamadas HTTP de lote; esse caminho precisa ser testado de ponta a ponta.
+- O prazo de 30 minutos exige medição real do XLSX grande em task com recursos definidos. O caso de um milhão de linhas em lotes de 1000 implica ao menos mil chamadas HTTP de lote; esse caminho precisa ser testado de ponta a ponta.
 - Sem retry funcional, manter registro de erro operacional e garantir que trabalhos travados sejam finalizados como `falhou` pelo verificador. Na implantação, configurar DLQ no SQS ou política equivalente no RabbitMQ. A fila pode reenviar mensagens por sua própria semântica; isso não autoriza uma segunda geração funcional.
 - Depois dos testes, configurar auto scaling somente para o serviço gerador, baseado em backlog por task, tempo real de geração e prazo aceito; manter a API separada.
 
@@ -141,7 +141,7 @@ Quando o trabalho chega a `pronto` ou `falhou`, consultar os destinos informados
 - O link de notificação dura até 3 horas e pode ser reemitido pela consulta de status enquanto o arquivo estiver disponível.
 - A geração tem prazo de 30 minutos contado da chamada `concluir`, incluindo a espera na fila. O worker aplica esse prazo e o verificador horário encerra trabalhos abandonados.
 - A API usa `X-Api-Key`; o portal administrativo usa senha e cookie. `periodo` é um par de datas usado como metadado e filtro. O histórico de estados finais é retido por 30 dias desde a criação.
-- Além de 100 registros, cada lote tem limite de 1 MiB. CSV é UTF-8 com BOM. O gerador XLSX escreve em fluxo e abre outra aba quando atinge o limite do Excel.
+- Além de 1000 registros, cada lote tem limite de 1 MiB. CSV é UTF-8 com BOM. XLSX solicitado com mais de 1 milhão de registros vira CSV ao concluir. O worker envia a saída em partes ao S3, sem arquivo temporário completo.
 - Na V2, considerar validação de colunas entre lotes, idempotência, retry de geração/notificações e auto scaling do worker.
 
 ## 10. Próximos passos para implantação

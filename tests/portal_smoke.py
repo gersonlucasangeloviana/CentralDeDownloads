@@ -17,6 +17,24 @@ client = urllib.request.build_opener(
 )
 
 
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, request, response, code, message, headers, url):
+        return None
+
+
+anonymous = urllib.request.build_opener(NoRedirect)
+for path in ("/api/files", "/api/files/example"):
+    try:
+        anonymous.open(urllib.request.Request(base + path, headers={
+            "Cookie": ".AspNetCore.Cookies=expired"
+        }))
+        raise AssertionError(f"{path} deveria rejeitar a sessão vencida")
+    except urllib.error.HTTPError as error:
+        assert error.code == 401, (path, error.code)
+        assert error.headers.get("X-Portal-Session-Expired") == "1"
+        assert ".AspNetCore.Cookies=" in error.headers.get("Set-Cookie", "")
+
+
 def post(path, form):
     request = urllib.request.Request(
         base + path, urllib.parse.urlencode(form).encode(), method="POST"
@@ -36,6 +54,8 @@ def token(html):
 
 with client.open(base + "/login") as response:
     login_page = response.read().decode()
+with client.open(base + "/login?expirada=1") as response:
+    assert "Sua sessão expirou. Entre novamente." in response.read().decode()
 
 assert post("/login", {"senha": password})[0] == 400
 status, home = post("/login", {

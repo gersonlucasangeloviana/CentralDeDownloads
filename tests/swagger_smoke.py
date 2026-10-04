@@ -35,7 +35,7 @@ assert set(create_schema["required"]) == {"nome", "formato"}
 assert create_schema["properties"]["formato"]["enum"] == ["xlsx", "csv", "json"]
 batch_schema = batch["requestBody"]["content"]["application/json"]["schema"]
 assert set(batch_schema["required"]) == {"id", "dados"}
-assert batch_schema["properties"]["dados"]["maxItems"] == 100
+assert batch_schema["properties"]["dados"]["maxItems"] == 1000
 assert batch_schema["properties"]["dados"]["items"]["additionalProperties"]["type"] == [
     "boolean", "integer", "number", "string"
 ]

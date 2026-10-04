@@ -24,6 +24,19 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.Always;
     options.LoginPath = "/login";
     options.ExpireTimeSpan = TimeSpan.FromHours(8);
+    options.Events.OnRedirectToLogin = async context =>
+    {
+        if (context.Request.Path.StartsWithSegments("/api/files") &&
+            context.Request.Path.Value?.EndsWith("/download", StringComparison.OrdinalIgnoreCase) != true)
+        {
+            await context.HttpContext.SignOutAsync();
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            context.Response.Headers["X-Portal-Session-Expired"] = "1";
+            return;
+        }
+
+        context.Response.Redirect(context.RedirectUri);
+    };
 });
 builder.Services.AddAuthorization();
 if (c["Proxy:KnownIpNetwork"] is { Length: > 0 } knownIpNetwork)
@@ -75,8 +88,10 @@ app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
 app.MapGet("/login", (HttpContext context, IAntiforgery antiforgery) => Results.Content("""
     <!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Central de Downloads · Entrar</title><style>body{font-family:system-ui;background:#f4f7fb;display:grid;place-items:center;min-height:100vh;margin:0}main{background:white;padding:2rem;border-radius:12px;box-shadow:0 8px 32px #1232;width:min(90vw,380px)}h1{font-size:1.35rem}label{display:block;margin:1rem 0 .4rem}input,button{box-sizing:border-box;width:100%;padding:.8rem;border-radius:6px;font:inherit}input{border:1px solid #bbc5d0}button{margin-top:1rem;background:#1654a3;color:white;border:0;cursor:pointer}</style>
-    <main><h1>Central de Downloads</h1><form method="post" action="/login"><input type="hidden" name="__RequestVerificationToken" value="{{TOKEN}}"><label for="senha">Senha de administrador</label><input id="senha" name="senha" type="password" required autofocus><button>Entrar</button></form></main></html>
-    """.Replace("{{TOKEN}}", HtmlEncoder.Default.Encode(antiforgery.GetAndStoreTokens(context).RequestToken!)),
+    <main><h1>Central de Downloads</h1>{{SESSION_MESSAGE}}<form method="post" action="/login"><input type="hidden" name="__RequestVerificationToken" value="{{TOKEN}}"><label for="senha">Senha de administrador</label><input id="senha" name="senha" type="password" required autofocus><button>Entrar</button></form></main></html>
+    """.Replace("{{TOKEN}}", HtmlEncoder.Default.Encode(antiforgery.GetAndStoreTokens(context).RequestToken!))
+       .Replace("{{SESSION_MESSAGE}}", context.Request.Query["expirada"] == "1"
+           ? "<p role=\"alert\">Sua sessão expirou. Entre novamente.</p>" : ""),
     "text/html; charset=utf-8"));
 app.MapPost("/login", async (HttpContext context, IAntiforgery antiforgery) =>
 {

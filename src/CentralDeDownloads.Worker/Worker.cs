@@ -1,9 +1,10 @@
 using CentralDeDownloads.Core;
+using System.Diagnostics;
 
 namespace CentralDeDownloads.Worker;
 
 public class Worker(IExportStore store, S3ExportStorage storage, IJobQueue queue,
-    ILogger<Worker> logger) : BackgroundService
+    IConfiguration configuration, ILogger<Worker> logger) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -52,40 +53,39 @@ public class Worker(IExportStore store, S3ExportStorage storage, IJobQueue queue
         using var timeout = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
         timeout.CancelAfter(deadline - DateTime.UtcNow > TimeSpan.Zero
             ? deadline - DateTime.UtcNow : TimeSpan.FromMilliseconds(1));
-        var path = Path.Combine(Path.GetTempPath(), $"gerador-{job.Id}-{Guid.NewGuid():N}.{job.Format}");
         var key = S3ExportStorage.ObjectKey(job.Id);
-        var uploaded = false;
         try
         {
             if (job.Columns.Count == 0) throw new InvalidOperationException("Arquivo sem colunas.");
-            var bytes = await ExportFileWriter.WriteAsync(job,
-                store.ReadBatchesAsync(job.Id, timeout.Token), path, timeout.Token);
-            await storage.UploadAsync(path, key, ContentType(job.Format), timeout.Token);
-            uploaded = true;
-            if (!await store.MarkReadyAsync(job.Id, key, bytes, timeout.Token))
+            var partMiB = configuration.GetValue("Aws:UploadPartMiB", 64);
+            if (partMiB is < 5 or > 512)
+                throw new InvalidOperationException("Aws:UploadPartMiB deve ficar entre 5 e 512.");
+            var started = Stopwatch.GetTimestamp();
+            var upload = await storage.UploadGeneratedAsync(job,
+                store.ReadBatchesAsync(job.Id, timeout.Token), key, ContentType(job.Format),
+                timeout.Token, partMiB * 1024 * 1024);
+            var generationMilliseconds = Stopwatch.GetElapsedTime(started).TotalMilliseconds;
+            if (!await store.MarkReadyAsync(job.Id, key, upload.Bytes, timeout.Token))
             {
                 await storage.DeleteObjectAsync(key, CancellationToken.None);
                 throw new InvalidOperationException("O trabalho mudou de estado durante a geração.");
             }
             try { await store.DeleteBatchesAsync(job.Id, CancellationToken.None); }
             catch (Exception cleanupError) { logger.LogError(cleanupError, "Falha na limpeza dos lotes de {JobId}", job.Id); }
-            logger.LogInformation("Arquivo {JobId} pronto com {Bytes} bytes", job.Id, bytes);
+            logger.LogInformation("Arquivo {JobId} pronto com {Bytes} bytes em {Parts} partes; geracao_ms={GenerationMs:F0}; upload_s3_ms={UploadMs}",
+                job.Id, upload.Bytes, upload.Parts, generationMilliseconds, upload.S3UploadMilliseconds);
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Falha ao gerar {JobId}", job.Id);
-            if (uploaded)
-            {
-                try { await storage.DeleteObjectAsync(key, CancellationToken.None); }
-                catch (Exception cleanupError) { logger.LogError(cleanupError, "Falha ao apagar arquivo parcial {JobId}", job.Id); }
-            }
+            try { await storage.DeleteObjectAsync(key, CancellationToken.None); }
+            catch (Exception cleanupError) { logger.LogError(cleanupError, "Falha ao apagar arquivo parcial {JobId}", job.Id); }
             await store.FailAsync(job.Id,
                 stoppingToken.IsCancellationRequested ? "Processamento interrompido pelo encerramento do worker." :
                 timeout.IsCancellationRequested ? "Prazo de 30 minutos excedido." : "Falha interna na geração.",
                 CancellationToken.None);
             await store.DeleteBatchesAsync(job.Id, CancellationToken.None);
         }
-        finally { try { File.Delete(path); } catch (IOException) { } }
     }
 
     private static string ContentType(string format) => format switch

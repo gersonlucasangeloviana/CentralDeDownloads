@@ -10,21 +10,27 @@ public static class ExportFileWriter
     public static async Task<long> WriteAsync(ExportJob job, IAsyncEnumerable<ExportBatch> batches,
         string path, CancellationToken ct)
     {
+        await using var output = File.Create(path);
+        await WriteAsync(job, batches, output, ct);
+        return output.Length;
+    }
+
+    public static async Task WriteAsync(ExportJob job, IAsyncEnumerable<ExportBatch> batches,
+        Stream output, CancellationToken ct)
+    {
         switch (job.Format)
         {
-            case "csv": await WriteCsvAsync(job, batches, path, ct); break;
-            case "json": await WriteJsonAsync(batches, path, ct); break;
-            case "xlsx": await WriteXlsxAsync(job, batches, path, ct); break;
+            case "csv": await WriteCsvAsync(job, batches, output, ct); break;
+            case "json": await WriteJsonAsync(batches, output, ct); break;
+            case "xlsx": await WriteXlsxAsync(job, batches, output, ct); break;
             default: throw new InvalidOperationException("Formato não suportado.");
         }
-        return new FileInfo(path).Length;
     }
 
     private static async Task WriteCsvAsync(ExportJob job, IAsyncEnumerable<ExportBatch> batches,
-        string path, CancellationToken ct)
+        Stream output, CancellationToken ct)
     {
-        await using var stream = File.Create(path);
-        await using var writer = new StreamWriter(stream, new UTF8Encoding(true), 65536);
+        await using var writer = new StreamWriter(output, new UTF8Encoding(true), 65536, leaveOpen: true);
         await writer.WriteLineAsync(string.Join(';', job.Columns.Select(EscapeCsv)));
         await foreach (var batch in batches.WithCancellation(ct))
         {
@@ -40,10 +46,9 @@ public static class ExportFileWriter
     }
 
     private static async Task WriteJsonAsync(IAsyncEnumerable<ExportBatch> batches,
-        string path, CancellationToken ct)
+        Stream output, CancellationToken ct)
     {
-        await using var stream = File.Create(path);
-        using var writer = new Utf8JsonWriter(stream);
+        using var writer = new Utf8JsonWriter(output);
         writer.WriteStartArray();
         await foreach (var batch in batches.WithCancellation(ct))
         {
@@ -60,10 +65,9 @@ public static class ExportFileWriter
     }
 
     private static async Task WriteXlsxAsync(ExportJob job, IAsyncEnumerable<ExportBatch> batches,
-        string path, CancellationToken ct)
+        Stream output, CancellationToken ct)
     {
-        await using var stream = File.Create(path);
-        using var archive = new ZipArchive(stream, ZipArchiveMode.Create, leaveOpen: true);
+        using var archive = new ZipArchive(output, ZipArchiveMode.Create, leaveOpen: true);
         using var xlsx = new XlsxStreamWriter(archive, job.Columns);
         await foreach (var batch in batches.WithCancellation(ct))
         {

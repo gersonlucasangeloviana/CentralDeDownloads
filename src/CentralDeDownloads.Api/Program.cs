@@ -110,6 +110,7 @@ app.MapPost("/v1/arquivos", async (CreateJobRequest request, IExportStore store,
     {
         Name = request.Nome.Trim(),
         Format = format,
+        RequestedFormat = format,
         PeriodStart = request.Periodo?.Inicio,
         PeriodEnd = request.Periodo?.Fim,
         Webhook = request.Webhook,

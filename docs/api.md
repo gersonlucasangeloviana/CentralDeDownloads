@@ -119,11 +119,11 @@ Guarde `id` para todas as chamadas seguintes. `400` indica nome, formato, perío
 
 | `formato` | Arquivo produzido |
 | --- | --- |
-| `xlsx` | Planilha Excel. As células de dados são gravadas como texto; se ultrapassar o limite de linhas do Excel, o gerador cria outra aba com o cabeçalho. |
+| `xlsx` | Planilha Excel até 1.000.000 de registros. Acima disso, a solicitação é convertida automaticamente para CSV ao concluir a ingestão. |
 | `csv` | Texto UTF-8 com BOM, colunas separadas por `;`. Os valores são convertidos para texto e escapados quando necessário. |
 | `json` | Um único array JSON com os objetos recebidos. Conserva os tipos simples e os campos de cada registro. |
 
-O formato é escolhido na criação. Os dados enviados depois continuam sendo JSON nos três casos: **não** envie conteúdo XLSX ou CSV no corpo de `/lotes`.
+O formato é solicitado na criação. Após `concluir`, a resposta informa `formato` (saída efetiva) e `formatoSolicitado` (pedido original). Os dados enviados continuam sendo JSON nos três casos: **não** envie conteúdo XLSX ou CSV no corpo de `/lotes`.
 
 ## Enviar registros: `POST /v1/arquivos/{id}/lotes`
 
@@ -140,7 +140,7 @@ Use o `id` da resposta `201` tanto na rota quanto no corpo. Exemplo:
 }
 ```
 
-`idLote` é opcional, deve ser uma string não vazia de até 128 caracteres e serve para rastreamento. Ele **não** evita duplicações em reenvios. `dados` deve ter de 1 a 100 objetos planos e o corpo inteiro pode ter até 1 MiB. Cada objeto precisa ter de 1 a 256 campos com nomes não vazios. Os valores podem ser string, número ou booleano; objetos, arrays e `null` não são aceitos. Para um valor sem conteúdo, envie `""`. Nomes de campos e valores string têm limite de 32767 caracteres e devem conter caracteres válidos para XLSX.
+`idLote` é opcional, deve ser uma string não vazia de até 128 caracteres e serve para rastreamento. Ele **não** evita duplicações em reenvios. `dados` deve ter de 1 a 1000 objetos planos e o corpo inteiro pode ter até 1 MiB. Cada objeto precisa ter de 1 a 256 campos com nomes não vazios. Os valores podem ser string, número ou booleano; objetos, arrays e `null` não são aceitos. Para um valor sem conteúdo, envie `""`. Nomes de campos e valores string têm limite de 32767 caracteres e devem conter caracteres válidos para XLSX.
 
 A primeira linha do primeiro lote **admitido pelo servidor** determina as colunas e sua ordem para XLSX e CSV. Nessas saídas, campos ausentes em linhas posteriores ficam vazios e campos adicionais são ignorados. No JSON, os objetos são preservados como enviados. Para obter colunas consistentes, envie as mesmas propriedades em todos os registros. Se enviar lotes em paralelo, a ordem de admissão pode diferir da ordem de envio.
 
@@ -164,7 +164,7 @@ A resposta `202 Accepted` informa a sequência atribuída pelo servidor e quanto
 }
 ```
 
-Para mais registros, faça outra chamada com o mesmo `id` e até 100 objetos em `dados`. Uma resposta `400` indica corpo inválido, como `id` divergente ou valor `null`; `409` significa arquivo inexistente ou já encerrado; `413` significa corpo acima de 1 MiB. Após uma resposta incerta, consulte as contagens do arquivo antes de decidir o que fazer: a V1 não tem reenvio idempotente.
+Para mais registros, faça outra chamada com o mesmo `id` e até 1000 objetos em `dados`. Uma resposta `400` indica corpo inválido, como `id` divergente ou valor `null`; `409` significa arquivo inexistente ou já encerrado; `413` significa corpo acima de 1 MiB. Após uma resposta incerta, consulte as contagens do arquivo antes de decidir o que fazer: a V1 não tem reenvio idempotente.
 
 ## Concluir o recebimento: `POST /v1/arquivos/{id}/concluir`
 

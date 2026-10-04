@@ -1,9 +1,10 @@
 using Amazon;
 using Amazon.S3;
 using Amazon.S3.Model;
-using Amazon.S3.Transfer;
 
 namespace CentralDeDownloads.Core;
+
+public readonly record struct GeneratedUpload(long Bytes, int Parts, long S3UploadMilliseconds);
 
 public sealed class S3ExportStorage : IDisposable
 {
@@ -29,16 +30,33 @@ public sealed class S3ExportStorage : IDisposable
         _useHttpUrl = serviceUrl?.StartsWith("http://", StringComparison.OrdinalIgnoreCase) == true;
     }
 
-    public async Task UploadAsync(string path, string key, string contentType, CancellationToken ct)
+    public async Task<GeneratedUpload> UploadGeneratedAsync(ExportJob job, IAsyncEnumerable<ExportBatch> batches,
+        string key, string contentType, CancellationToken ct, int partSize = MultipartUploadStream.DefaultPartSize)
     {
-        using var transfer = new TransferUtility(_s3);
-        await transfer.UploadAsync(new TransferUtilityUploadRequest
+        var started = await _s3.InitiateMultipartUploadAsync(new InitiateMultipartUploadRequest
         {
             BucketName = _bucket,
             Key = key,
-            FilePath = path,
             ContentType = contentType
         }, ct);
+        try
+        {
+            using var output = new MultipartUploadStream(_s3, _bucket, key, started.UploadId, ct, partSize);
+            await ExportFileWriter.WriteAsync(job, batches, output, ct);
+            await output.CompleteAsync(ct);
+            return new GeneratedUpload(output.BytesWritten, output.PartsUploaded,
+                output.S3UploadMilliseconds);
+        }
+        catch
+        {
+            try
+            {
+                await _s3.AbortMultipartUploadAsync(new AbortMultipartUploadRequest
+                { BucketName = _bucket, Key = key, UploadId = started.UploadId }, CancellationToken.None);
+            }
+            catch { /* O worker registra a falha original; o lifecycle remove partes órfãs. */ }
+            throw;
+        }
     }
 
     public Task DeleteObjectAsync(string key, CancellationToken ct) =>

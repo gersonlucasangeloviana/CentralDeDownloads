@@ -75,7 +75,7 @@
               }
             ],
             "url": "{{baseUrl}}/v1/arquivos/{{simpleJobId}}/lotes",
-            "description": "Dois pedidos planos. Não envie mais de 100 registros em um lote.",
+            "description": "Dois pedidos planos. Não envie mais de 1000 registros em um lote ou 1 MiB no corpo.",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"id\": \"{{simpleJobId}}\",\n  \"dados\": [\n    {\n      \"Pedido\": \"PED-1001\",\n      \"Cliente\": \"Ana\",\n      \"Valor\": 149.9\n    },\n    {\n      \"Pedido\": \"PED-1002\",\n      \"Cliente\": \"Bia\",\n      \"Valor\": 250.0\n    }\n  ]\n}",

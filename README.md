@@ -2,11 +2,11 @@
 
 [![Build and test](https://github.com/gersonlucasangeloviana/CentralDeDownloads/actions/workflows/ci.yml/badge.svg)](https://github.com/gersonlucasangeloviana/CentralDeDownloads/actions/workflows/ci.yml)
 
-API .NET 10 para gerar e disponibilizar arquivos XLSX, CSV e JSON de forma assíncrona. A API recebe dados em lotes, um worker produz o arquivo e o portal administrativo permite acompanhar o processamento e baixar o resultado.
+API .NET 10 para gerar e disponibilizar arquivos XLSX, CSV e JSON de forma assíncrona. A API recebe até 1.000 registros por lote (limitados a 1 MiB), um worker envia o resultado em fluxo ao S3 e o portal administrativo permite acompanhar o processamento e baixar o arquivo. Solicitações XLSX com mais de um milhão de registros são convertidas para CSV ao concluir a ingestão.
 
 ## Recursos
 
-- Geração em fluxo, sem carregar o arquivo inteiro na memória.
+- Geração e upload multipart em fluxo, sem manter o arquivo inteiro em memória ou em disco temporário.
 - MongoDB ou PostgreSQL para armazenar trabalhos e lotes; SQS ou RabbitMQ para distribuir a geração.
 - Armazenamento privado no S3, links temporários de download e notificações opcionais por webhook ou e-mail.
 - Portal administrativo separado da API e documentação interativa em `/swagger`.
@@ -81,7 +81,7 @@ As rotas de operação exigem o cabeçalho `X-Api-Key`. As exceções são `/hea
    }
    ```
 
-   São aceitos de 1 a 100 registros e até 1 MiB por requisição. Cada registro deve ser um objeto plano, sem objetos, arrays ou `null` nos campos. Valores sem conteúdo devem ser strings vazias. `idLote` é registrado, mas **não deduplica** na V1. A resposta informa a sequência de admissão atribuída pelo servidor.
+   São aceitos de 1 a 1.000 registros e até 1 MiB por requisição. Cada registro deve ser um objeto plano, sem objetos, arrays ou `null` nos campos. Valores sem conteúdo devem ser strings vazias. `idLote` é registrado, mas **não deduplica** na V1. A resposta informa a sequência de admissão atribuída pelo servidor.
 
 3. `POST /v1/arquivos/{id}/concluir` aceita corpo vazio ou `{ "totalLotes": 10, "totalItens": 1000 }`. Totais divergentes retornam `422`, colocam o trabalho em `falhou` e descartam os lotes. Aguarde a resposta de todos os envios paralelos antes de concluir.
 4. `GET /v1/arquivos/{id}` consulta estado, contagens, erro e link temporário quando pronto.
@@ -125,7 +125,7 @@ docker build -f Dockerfile.portal -t central-downloads-portal .
 
 O Compose local inicia MongoDB, PostgreSQL, RabbitMQ e LocalStack 4.12 para S3/SQS. Os nomes de banco, bucket e fila usados nesses exemplos são exclusivos do ambiente local; o [guia local](docs/desenvolvimento-local.md) contém os valores e comandos completos.
 
-Um benchmark isolado do escritor XLSX, sem leitura do banco nem upload S3, gerou 1.048.577 registros em duas abas e um arquivo de 228 MB em cerca de 8 segundos num Mac ARM local, com aproximadamente 89 MB de memória residente. Isso confirma a escrita em fluxo; o tempo de ponta a ponta depende do banco escolhido, rede, CPU e disco da task ECS.
+Um benchmark anterior do escritor XLSX, sem leitura do banco nem upload S3, gerou 1.048.577 registros em duas abas e um arquivo de 228 MB em cerca de 8 segundos num Mac ARM local. Esse teste precede a conversão atual de XLSX grande para CSV. Para medições de ponta a ponta, veja o [roteiro de carga](docs/teste-carga-worker.md) e o [diário comparativo](docs/diario-comparativo-ingestao.md).
 
 Há uma imagem/tarefa ECS para cada serviço; a configuração inicial é uma task da API, uma do worker e uma do portal. O worker processa um arquivo por vez e a fila escolhida absorve pedidos simultâneos. O prazo de processamento é de 30 minutos desde a conclusão; o verificador horário marca trabalhos abandonados como falha. A API mantém o histórico por 30 dias e limpa solicitações abertas sem atividade por mais de 30 minutos.
 
@@ -134,7 +134,7 @@ Há uma imagem/tarefa ECS para cada serviço; a configuração inicial é uma ta
 - A primeira linha do primeiro lote admitido define colunas e ordem. Lotes posteriores **não são comparados** contra esse cabeçalho; campos ausentes viram células vazias no XLSX/CSV e campos extras são ignorados nesses formatos. O JSON conserva o registro recebido. Validar consistência entre lotes é débito técnico da V2.
 - Não há retry funcional nem substituição de lotes. Uma repetição de `POST /lotes` pode duplicar registros. O worker impede duas gerações simultâneas do mesmo ID por transição condicional de estado, pois a fila pode reenviar mensagens.
 - Notificações são tentadas uma vez e têm resultado registrado; uma falha de e-mail ou webhook não altera o estado `pronto`.
-- Os lotes são armazenados no banco escolhido. Para arquivos grandes, monitorar capacidade e desempenho do MongoDB ou PostgreSQL. Um milhão de registros implica pelo menos 10 mil chamadas de lote.
+- Os lotes são armazenados no banco escolhido. Para arquivos grandes, monitore capacidade e desempenho do MongoDB ou PostgreSQL. Um milhão de registros exige ao menos mil chamadas com lotes de 1.000 itens, desde que cada corpo caiba em 1 MiB.
 - Docker não é necessário para os testes unitários. Os testes de ponta a ponta dependem de banco, fila e S3 configurados.
 
 ## Preparação para publicação
@@ -153,6 +153,8 @@ Há uma imagem/tarefa ECS para cada serviço; a configuração inicial é uma ta
 - [Infraestrutura AWS](infra/aws/README.md): Terraform, imagens e operação do ambiente de demonstração.
 - [Revisão técnica](docs/revisao-publicacao.md): correções verificadas e pontos para operação.
 - [Coleção Postman](postman/README.md): fluxos CSV e XLSX executáveis. A pasta `postman/` fica fora das imagens Docker.
+- [Publicação AWS](docs/arquitetura-publicacao-aws.md): diagrama da infraestrutura e fluxo de arquivos.
+- [Resultados de carga](docs/resultado-teste-carga-aws-2026-10-03.md): medições da implantação de demonstração.
 
 ## Licença
 
