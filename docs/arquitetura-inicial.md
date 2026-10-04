@@ -1,7 +1,7 @@
 # Central de geração e download de arquivos — especificação inicial da V1
 
-**Estado:** V1 implementada e validada localmente; implantação na AWS pendente  
-**Atualizado em:** 2026-10-02
+**Estado:** V1 implementada; a implantação de demonstração está descrita em [infra/aws/README.md](../infra/aws/README.md).
+**Atualizado em:** 2026-10-04
 
 ## 1. Objetivo
 

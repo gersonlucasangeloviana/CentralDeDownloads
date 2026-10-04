@@ -2,7 +2,7 @@
 
 Para as opções de preenchimento de `POST /v1/arquivos`, incluindo `formato`, período e notificações, consulte o [guia de uso da API](../docs/api.md).
 
-Importe [GeradorExcel.postman_collection.json](GeradorExcel.postman_collection.json) no Postman. A coleção contém dois roteiros independentes:
+Importe [CentralDeDownloads.postman_collection.json](CentralDeDownloads.postman_collection.json) no Postman. A coleção contém dois roteiros independentes:
 
 | Pasta | Resultado | Passos |
 | --- | --- | --- |

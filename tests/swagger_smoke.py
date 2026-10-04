@@ -1,11 +1,11 @@
-"""Confere o Swagger/OpenAPI de uma API em execução (GERADOR_API_URL obrigatório)."""
+"""Confere o Swagger/OpenAPI de uma API em execução (CENTRAL_DOWNLOADS_API_URL obrigatório)."""
 
 import json
 import os
 import urllib.error
 import urllib.request
 
-base = os.environ["GERADOR_API_URL"].rstrip("/")
+base = os.environ["CENTRAL_DOWNLOADS_API_URL"].rstrip("/")
 
 
 def get(path):

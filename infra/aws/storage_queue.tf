@@ -65,7 +65,7 @@ resource "aws_sqs_queue" "jobs" {
 
 resource "aws_cloudwatch_metric_alarm" "dead_letter_messages" {
   alarm_name          = "${local.name}-dlq-messages"
-  alarm_description   = "Há mensagens não processadas na DLQ do GeradorExcel."
+  alarm_description   = "Há mensagens não processadas na DLQ do CentralDeDownloads."
   namespace           = "AWS/SQS"
   metric_name         = "ApproximateNumberOfMessagesVisible"
   statistic           = "Maximum"

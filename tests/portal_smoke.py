@@ -1,6 +1,6 @@
 """Verifica autenticação e proteção antifalsificação do portal configurado.
 
-Requer GERADOR_PORTAL_URL e GERADOR_PORTAL_PASSWORD. Não altera trabalhos.
+Requer CENTRAL_DOWNLOADS_PORTAL_URL e CENTRAL_DOWNLOADS_PORTAL_PASSWORD. Não altera trabalhos.
 """
 
 import http.cookiejar
@@ -10,8 +10,8 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-base = os.environ["GERADOR_PORTAL_URL"].rstrip("/")
-password = os.environ["GERADOR_PORTAL_PASSWORD"]
+base = os.environ["CENTRAL_DOWNLOADS_PORTAL_URL"].rstrip("/")
+password = os.environ["CENTRAL_DOWNLOADS_PORTAL_PASSWORD"]
 client = urllib.request.build_opener(
     urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar())
 )

@@ -1,0 +1,24 @@
+name: Build and test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  dotnet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - name: Restore
+        run: dotnet restore CentralDeDownloads.slnx
+      - name: Build
+        run: dotnet build CentralDeDownloads.slnx -c Release --no-restore
+      - name: Test
+        run: dotnet test CentralDeDownloads.slnx -c Release --no-build

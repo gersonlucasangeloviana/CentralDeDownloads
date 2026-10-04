@@ -1,6 +1,8 @@
-# AWS com Terraform — GeradorExcel
+# AWS com Terraform — CentralDeDownloads
 
 Esta configuração cria S3 privado, SQS com DLQ, ECR, VPC com duas sub-redes públicas em zonas de disponibilidade diferentes, papéis IAM, nomes de segredos, CloudWatch, certificado ACM e um cluster ECS. Na segunda fase, cria ALB e uma task Fargate para cada um dos três serviços. As tasks recebem IP público e acessam a internet pelo Internet Gateway; não há NAT Gateway. O ALB encaminha as requisições da API e do portal às tasks. O DNS de `vianadev.com.br` permanece na Cloudflare. O MongoDB Atlas continua fora da AWS; sua conexão é colocada no Secrets Manager **fora do Terraform** para não gravar a senha no state.
+
+**Nomes da implantação existente:** o prefixo `gerador-excel`, o banco `gerador_excel`, o bucket de estado e a chave do backend foram mantidos para que este código continue compatível com os recursos já criados. A identidade do código e dos projetos é `CentralDeDownloads`. Mudar `name_prefix`, o nome do bucket ou a chave do backend em um ambiente existente exige um plano de migração do estado e dos recursos; não faça essa troca como simples renomeação.
 
 ## Pré-requisitos
 
@@ -16,13 +18,13 @@ Use credenciais temporárias de uma pessoa autorizada a criar S3, IAM, VPC, ECS 
 No terminal, configure um perfil separado para este projeto:
 
 ```sh
-aws configure sso --profile gerador-excel
-aws sso login --profile gerador-excel
-aws sts get-caller-identity --profile gerador-excel
-export AWS_PROFILE=gerador-excel
+aws configure sso --profile central-downloads
+aws sso login --profile central-downloads
+aws sts get-caller-identity --profile central-downloads
+export AWS_PROFILE=central-downloads
 ```
 
-No assistente `aws configure sso`, informe a URL de início do IAM Identity Center, a região em que ele foi habilitado (**`us-east-2`, Ohio, nesta conta**), a conta e o conjunto de permissões; use **`us-east-1`, N. Virginia, como região padrão da CLI** para os recursos do app. O Identity Center pode estar em uma região diferente da infraestrutura. Confirme que o `Account` mostrado por `get-caller-identity` é a conta AWS desejada **antes** de executar `terraform apply`. O perfil fica em `~/.aws/config`, fora do projeto. Ao expirar a sessão, repita `aws sso login --profile gerador-excel`. Mantenha `AWS_PROFILE=gerador-excel` no mesmo terminal dos comandos Terraform e do script de envio das imagens.
+No assistente `aws configure sso`, informe a URL de início do IAM Identity Center, a região em que ele foi habilitado (**`us-east-2`, Ohio, nesta conta**), a conta e o conjunto de permissões; use **`us-east-1`, N. Virginia, como região padrão da CLI** para os recursos do app. O Identity Center pode estar em uma região diferente da infraestrutura. Confirme que o `Account` mostrado por `get-caller-identity` é a conta AWS desejada **antes** de executar `terraform apply`. O perfil fica em `~/.aws/config`, fora do projeto. Ao expirar a sessão, repita `aws sso login --profile central-downloads`. Mantenha `AWS_PROFILE=central-downloads` no mesmo terminal dos comandos Terraform e do script de envio das imagens. Se já usa o perfil `gerador-excel`, pode continuar com ele; o nome do perfil não altera recursos AWS.
 
 ## 1. Criar o bucket de estado
 
@@ -62,7 +64,7 @@ Se quiser usar os recursos AWS também no teste local, execute `./sync-local-con
 
 O mesmo segredo `api-key` é usado por API e portal. Não coloque esses valores em `terraform.tfvars`, comandos de shell, state ou Git. Se a senha do Atlas for trocada, atualize o segredo antes de substituir as tasks. As tasks recebem segredos somente ao iniciar: após uma rotação, faça novo deploy.
 
-Para enviar notificações por e-mail, crie no Secrets Manager um segredo com a chave do Resend, informe seu ARN em `resend_secret_arn` e configure `resend_from` com um remetente de domínio verificado no Resend. A API envia por e-mail um link temporário de download quando o arquivo fica pronto; o arquivo gerado não é anexado automaticamente. Depois de mudar esses valores, aplique o Terraform para iniciar uma nova task da API. Neste ambiente de teste, o remetente é `Gerador Excel <arquivos@vianadev.com.br>`.
+Para enviar notificações por e-mail, crie no Secrets Manager um segredo com a chave do Resend, informe seu ARN em `resend_secret_arn` e configure `resend_from` com um remetente de domínio verificado no Resend. A API envia por e-mail um link temporário de download quando o arquivo fica pronto; o arquivo gerado não é anexado automaticamente. Depois de mudar esses valores, aplique o Terraform para iniciar uma nova task da API. Para usar a marca atual, configure `Central de Downloads <arquivos@vianadev.com.br>` como remetente; uma implantação anterior pode continuar exibindo o nome antigo até receber nova configuração.
 
 **Acesso ao Atlas:** sem NAT, cada task tem um IP público de saída que pode mudar a cada inicialização ou substituição. Portanto, não existe um único IP `/32` para cadastrar permanentemente na lista de acesso do Atlas. Para um teste curto com conexão pública, uma opção é permitir temporariamente `0.0.0.0/0` em **Network Access** do Atlas, com usuário de banco exclusivo, senha forte e revogação desse acesso ao fim do teste. Isso permite tentativas de conexão de qualquer origem e aumenta a exposição do banco. Para manter a lista restrita, será necessário definir outra forma de saída com IP fixo ou uma conexão privada com o Atlas, sujeitas a custos e configuração adicionais. Confira também que `vpc_cidr` não se sobrepõe à rede do Atlas se optar por conexão privada no futuro.
 

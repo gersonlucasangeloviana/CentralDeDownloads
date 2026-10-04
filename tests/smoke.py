@@ -1,6 +1,6 @@
 """Teste de ponta a ponta contra uma API, banco, fila e S3 configurados.
 
-GERADOR_API_URL e GERADOR_API_KEY são obrigatórios. Cria arquivos de teste.
+CENTRAL_DOWNLOADS_API_URL e CENTRAL_DOWNLOADS_API_KEY são obrigatórios. Cria arquivos de teste.
 """
 
 import io
@@ -12,8 +12,8 @@ import urllib.request
 import zipfile
 from concurrent.futures import ThreadPoolExecutor
 
-BASE = os.environ["GERADOR_API_URL"].rstrip("/")
-KEY = os.environ["GERADOR_API_KEY"]
+BASE = os.environ["CENTRAL_DOWNLOADS_API_URL"].rstrip("/")
+KEY = os.environ["CENTRAL_DOWNLOADS_API_KEY"]
 
 
 def call(method, path, data=None):

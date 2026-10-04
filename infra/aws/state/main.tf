@@ -3,7 +3,7 @@ data "aws_caller_identity" "current" {}
 resource "aws_s3_bucket" "terraform_state" {
   bucket = "gerador-excel-${var.environment}-tfstate-${data.aws_caller_identity.current.account_id}-${var.aws_region}"
   tags = {
-    Application = "GeradorExcel"
+    Application = "CentralDeDownloads"
     Environment = var.environment
     ManagedBy   = "Terraform"
   }

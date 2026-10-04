@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CentralDeDownloads.Api/CentralDeDownloads.Api.csproj" />
+    <Project Path="src/CentralDeDownloads.Core/CentralDeDownloads.Core.csproj" />
+    <Project Path="src/CentralDeDownloads.Portal/CentralDeDownloads.Portal.csproj" />
+    <Project Path="src/CentralDeDownloads.Worker/CentralDeDownloads.Worker.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CentralDeDownloads.Tests/CentralDeDownloads.Tests.csproj" />
+  </Folder>
+</Solution>

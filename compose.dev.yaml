@@ -11,21 +11,21 @@ services:
   postgres:
     image: postgres:17
     environment:
-      POSTGRES_USER: gerador
-      POSTGRES_PASSWORD: gerador-local
-      POSTGRES_DB: gerador_excel
+      POSTGRES_USER: central
+      POSTGRES_PASSWORD: central-local
+      POSTGRES_DB: central_downloads
     ports:
       - "5433:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U gerador -d gerador_excel"]
+      test: ["CMD-SHELL", "pg_isready -U central -d central_downloads"]
       interval: 5s
       timeout: 3s
       retries: 12
   rabbitmq:
     image: rabbitmq:4.2-management
     environment:
-      RABBITMQ_DEFAULT_USER: gerador
-      RABBITMQ_DEFAULT_PASS: gerador-local
+      RABBITMQ_DEFAULT_USER: central
+      RABBITMQ_DEFAULT_PASS: central-local
     ports:
       - "5673:5672"
       - "15673:15672"

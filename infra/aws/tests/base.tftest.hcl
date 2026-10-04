@@ -13,7 +13,8 @@ mock_provider "aws" {
 run "base_without_services" {
   command = plan
   variables {
-    aws_region = "us-east-1"
+    aws_region  = "us-east-1"
+    environment = "prod"
   }
   assert {
     condition     = length(aws_ecs_service.api) == 0 && length(aws_ecs_service.worker) == 0 && length(aws_ecs_service.portal) == 0

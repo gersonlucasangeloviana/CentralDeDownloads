@@ -16,7 +16,7 @@ provider "aws" {
 
   default_tags {
     tags = {
-      Application = "GeradorExcel"
+      Application = "CentralDeDownloads"
       Environment = var.environment
       ManagedBy   = "Terraform"
     }

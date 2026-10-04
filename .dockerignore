@@ -2,6 +2,9 @@
 **/obj
 **/TestResults
 .git
+.github/
+docs/
+LICENSE
 .env
 .env.local
 postman/

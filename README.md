@@ -1,15 +1,54 @@
-# GeradorExcel
+# CentralDeDownloads
 
-Central de geração assíncrona de XLSX, CSV e JSON em .NET 10. A API recebe lotes, o worker gera o arquivo e o portal administrativo permite consultar e baixar resultados.
+[![Build and test](https://github.com/gersonlucasangeloviana/CentralDeDownloads/actions/workflows/ci.yml/badge.svg)](https://github.com/gersonlucasangeloviana/CentralDeDownloads/actions/workflows/ci.yml)
+
+API .NET 10 para gerar e disponibilizar arquivos XLSX, CSV e JSON de forma assíncrona. A API recebe dados em lotes, um worker produz o arquivo e o portal administrativo permite acompanhar o processamento e baixar o resultado.
+
+## Recursos
+
+- Geração em fluxo, sem carregar o arquivo inteiro na memória.
+- MongoDB ou PostgreSQL para armazenar trabalhos e lotes; SQS ou RabbitMQ para distribuir a geração.
+- Armazenamento privado no S3, links temporários de download e notificações opcionais por webhook ou e-mail.
+- Portal administrativo separado da API e documentação interativa em `/swagger`.
+
+## Arquitetura
+
+```mermaid
+flowchart LR
+    Integrador --> API
+    Portal --> API
+    API --> Banco[(MongoDB ou PostgreSQL)]
+    API --> Fila[SQS ou RabbitMQ]
+    Fila --> Worker
+    Worker --> Banco
+    Worker --> S3[(S3 privado)]
+    API --> S3
+```
 
 ## Projetos
 
 | Projeto | Responsabilidade |
 | --- | --- |
-| `src/GeradorExcel.Api` | Minimal API, autenticação por chave, ingestão, conclusão, status, links e manutenção |
-| `src/GeradorExcel.Worker` | Consome SQS ou RabbitMQ, gera arquivos em fluxo e envia ao S3 |
-| `src/GeradorExcel.Portal` | Interface administrativa separada, com cookie e proxy para a API |
-| `src/GeradorExcel.Core` | Modelos, MongoDB/PostgreSQL, SQS/RabbitMQ, S3, validação e geração dos três formatos |
+| `src/CentralDeDownloads.Api` | Minimal API, autenticação por chave, ingestão, conclusão, status, links e manutenção |
+| `src/CentralDeDownloads.Worker` | Consome SQS ou RabbitMQ, gera arquivos em fluxo e envia ao S3 |
+| `src/CentralDeDownloads.Portal` | Interface administrativa separada, com cookie e proxy para a API |
+| `src/CentralDeDownloads.Core` | Modelos, MongoDB/PostgreSQL, SQS/RabbitMQ, S3, validação e geração dos três formatos |
+
+## Início rápido
+
+Requisitos: .NET 10, Docker e Python 3. Para executar com MongoDB, SQS e S3 locais:
+
+1. Inicie as dependências com `docker compose -f compose.dev.yaml up -d`.
+2. Crie `.env.local` seguindo o [guia de desenvolvimento local](docs/desenvolvimento-local.md).
+3. Em três terminais, carregue `.env.local` com `set -a; source .env.local; set +a` e execute, respectivamente:
+
+   ```bash
+   dotnet run --project src/CentralDeDownloads.Api --launch-profile http
+   dotnet run --project src/CentralDeDownloads.Worker
+   dotnet run --project src/CentralDeDownloads.Portal --launch-profile http
+   ```
+
+A documentação da API fica em [http://localhost:5151/swagger/](http://localhost:5151/swagger/) e o portal em [http://localhost:5192](http://localhost:5192). O [guia local](docs/desenvolvimento-local.md) também mostra como rodar os testes de ponta a ponta e trocar banco ou fila.
 
 ## Contrato da API
 
@@ -71,20 +110,20 @@ Em produção, `PublicBaseUrl` deve ser HTTPS. Se uma solicitação informar e-m
 ## Build e testes
 
 ```bash
-dotnet restore GeradorExcel.slnx
-dotnet build GeradorExcel.slnx -c Release
-dotnet test GeradorExcel.slnx -c Release
+dotnet restore CentralDeDownloads.slnx
+dotnet build CentralDeDownloads.slnx -c Release
+dotnet test CentralDeDownloads.slnx -c Release
 ```
 
 Imagens de container:
 
 ```bash
-docker build -f Dockerfile.api -t gerador-excel-api .
-docker build -f Dockerfile.worker -t gerador-excel-worker .
-docker build -f Dockerfile.portal -t gerador-excel-portal .
+docker build -f Dockerfile.api -t central-downloads-api .
+docker build -f Dockerfile.worker -t central-downloads-worker .
+docker build -f Dockerfile.portal -t central-downloads-portal .
 ```
 
-Para testar localmente, `docker compose -f compose.dev.yaml up -d` inicia MongoDB, PostgreSQL, RabbitMQ e um emulador de S3/SQS. O compose fixa LocalStack `4.12` para funcionar sem token de conta; ele é somente uma dependência de desenvolvimento. Execute API, worker e portal com `dotnet run --project ...` em terminais separados. Para MongoDB, use `Storage__Provider=MongoDB` e `Mongo__ConnectionString=mongodb://localhost:27017`; para PostgreSQL, use `Storage__Provider=PostgreSQL` e `Postgres__ConnectionString='Host=localhost;Port=5433;Database=gerador_excel;Username=gerador;Password=gerador-local'`. Para SQS, use `Queue__Provider=SQS` e `Aws__QueueUrl=http://localhost:4566/queue/us-east-1/000000000000/gerador-excel-local`; para RabbitMQ, use `Queue__Provider=RabbitMQ`, `RabbitMq__Uri=amqp://gerador:gerador-local@localhost:5673/` e `RabbitMq__QueueName=gerador-excel-local`. Repita a escolha de banco e fila **nos dois serviços**. Configure sempre `Aws__Region=us-east-1`, `Aws__Bucket=gerador-excel-local`, `Aws__ServiceUrl=http://localhost:4566` e credenciais AWS fictícias (`AWS_ACCESS_KEY_ID=test`, `AWS_SECRET_ACCESS_KEY=test`). Configure também as chaves da API/portal indicadas em `.env.example`. Com tudo iniciado, rode `GERADOR_API_URL=http://localhost:5080 GERADOR_API_KEY=... python3 tests/smoke.py` e `GERADOR_API_URL=http://localhost:5080 python3 tests/swagger_smoke.py`. Para validar o portal, rode `GERADOR_PORTAL_URL=http://localhost:5081 GERADOR_PORTAL_PASSWORD=... python3 tests/portal_smoke.py`.
+O Compose local inicia MongoDB, PostgreSQL, RabbitMQ e LocalStack 4.12 para S3/SQS. Os nomes de banco, bucket e fila usados nesses exemplos são exclusivos do ambiente local; o [guia local](docs/desenvolvimento-local.md) contém os valores e comandos completos.
 
 Um benchmark isolado do escritor XLSX, sem leitura do banco nem upload S3, gerou 1.048.577 registros em duas abas e um arquivo de 228 MB em cerca de 8 segundos num Mac ARM local, com aproximadamente 89 MB de memória residente. Isso confirma a escrita em fluxo; o tempo de ponta a ponta depende do banco escolhido, rede, CPU e disco da task ECS.
 
@@ -106,8 +145,15 @@ Há uma imagem/tarefa ECS para cada serviço; a configuração inicial é uma ta
 - Manter uma task do portal na V1. Para usar várias réplicas, persistir o chaveiro ASP.NET Data Protection para que compartilhem os cookies de autenticação.
 - Medir o tempo de ponta a ponta e uso de disco/RAM com cargas reais na task ECS escolhida antes de atender arquivos de 200 MB.
 
-Veja a [especificação de arquitetura](docs/arquitetura-inicial.md) para as premissas e decisões de evolução.
+## Documentação
 
-Para provisionar os recursos AWS com Terraform, veja [infra/aws/README.md](infra/aws/README.md). A primeira aplicação cria a base; a ativação dos serviços ECS fica para depois de preencher os segredos, publicar as imagens e configurar o domínio.
-Veja também a [revisão para publicação](docs/revisao-publicacao.md) para correções verificadas e itens de implantação.
-Os [fluxos Postman](postman/README.md) demonstram uma geração CSV com um lote e uma XLSX com três lotes. A pasta `postman/` é excluída do contexto Docker e não entra nas imagens publicadas.
+- [Guia da API](docs/api.md): contrato, exemplos de requisições e respostas.
+- [Desenvolvimento local](docs/desenvolvimento-local.md): configuração, execução e testes de ponta a ponta.
+- [Arquitetura da V1](docs/arquitetura-inicial.md): premissas, decisões e limites.
+- [Infraestrutura AWS](infra/aws/README.md): Terraform, imagens e operação do ambiente de demonstração.
+- [Revisão técnica](docs/revisao-publicacao.md): correções verificadas e pontos para operação.
+- [Coleção Postman](postman/README.md): fluxos CSV e XLSX executáveis. A pasta `postman/` fica fora das imagens Docker.
+
+## Licença
+
+Distribuído sob a [licença MIT](LICENSE).

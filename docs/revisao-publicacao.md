@@ -1,6 +1,6 @@
-# Revisão de código para publicação
+# Revisão técnica da V1
 
-**Data:** 2026-10-03  
+**Revisão inicial:** 2026-10-03; build, testes e imagens revalidados em 2026-10-04 após a renomeação.
 **Escopo:** API, worker, portal, MongoDB/PostgreSQL, SQS/RabbitMQ e S3.  
 **Resultado:** código validado para implantação de teste em uma task por serviço. A abertura ao tráfego real depende dos itens de infraestrutura abaixo.
 
@@ -18,9 +18,9 @@
 
 ## Verificação executada
 
-- `dotnet build GeradorExcel.slnx -c Release`: sem erros ou avisos.
-- `dotnet format whitespace GeradorExcel.slnx --verify-no-changes`: formatação aprovada.
-- `dotnet test GeradorExcel.slnx -c Release`: 12 testes aprovados.
+- `dotnet build CentralDeDownloads.slnx -c Release`: sem erros ou avisos.
+- `dotnet format whitespace CentralDeDownloads.slnx --verify-no-changes`: formatação aprovada.
+- `dotnet test CentralDeDownloads.slnx -c Release`: 12 testes aprovados.
 - Imagens Docker de API, worker e portal construídas.
 - Teste de ponta a ponta com MongoDB/SQS e PostgreSQL/RabbitMQ: XLSX, CSV, JSON, 800 registros em lotes paralelos e divergência de totais.
 - Teste do portal: login, rejeição sem token e logout protegido; limite de tentativas respondeu `429`.

@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).parent
-OUT = ROOT / "GeradorExcel.postman_collection.json"
+OUT = ROOT / "CentralDeDownloads.postman_collection.json"
 
 
 def event(source):
@@ -194,7 +194,7 @@ pm.test("Conteúdo é XLSX", () => {
 
 collection = {
     "info": {
-        "name": "GeradorExcel - fluxos de geração",
+        "name": "CentralDeDownloads - fluxos de geração",
         "description": "Dois roteiros executáveis: CSV com um lote e XLSX com três lotes. Configure baseUrl e apiKey nas variáveis da coleção e execute uma pasta no Collection Runner com Delay de 2000 ms.",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     },
