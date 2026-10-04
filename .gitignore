@@ -3,7 +3,6 @@
 .codex-build/
 apresentacao/
 benchmarks/slide-*/
-benchmarks/**/*.log
 .DS_Store
 .env
 .env.local

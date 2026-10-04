@@ -1,0 +1,157 @@
+
+         /\      Grafana   /‾‾/
+    /\  /  \     |\  __   /  /
+   /  \/    \    | |/ /  /   ‾‾\
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/
+
+
+     execution: local
+        script: tests/worker-load.k6.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 4 max VUs, 1h30m30s max duration (incl. graceful stop):
+              * files: 1 iterations for each of 4 VUs (maxDuration: 1h30m0s, gracefulStop: 30s)
+
+
+running (0h00m01.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 4 VUs  0h00m01.0s/1h30m0s  0/4 iters, 1 per VU
+
+running (0h00m02.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 4 VUs  0h00m02.0s/1h30m0s  0/4 iters, 1 per VU
+
+running (0h00m03.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 4 VUs  0h00m03.0s/1h30m0s  0/4 iters, 1 per VU
+
+running (0h00m04.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 4 VUs  0h00m04.0s/1h30m0s  0/4 iters, 1 per VU
+
+running (0h00m05.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 4 VUs  0h00m05.0s/1h30m0s  0/4 iters, 1 per VU
+
+running (0h00m06.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 4 VUs  0h00m06.0s/1h30m0s  0/4 iters, 1 per VU
+
+running (0h00m07.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 4 VUs  0h00m07.0s/1h30m0s  0/4 iters, 1 per VU
+
+running (0h00m08.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 4 VUs  0h00m08.0s/1h30m0s  0/4 iters, 1 per VU
+
+running (0h00m09.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 4 VUs  0h00m09.0s/1h30m0s  0/4 iters, 1 per VU
+
+running (0h00m10.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 4 VUs  0h00m10.0s/1h30m0s  0/4 iters, 1 per VU
+
+running (0h00m11.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 4 VUs  0h00m11.0s/1h30m0s  0/4 iters, 1 per VU
+
+running (0h00m12.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 4 VUs  0h00m12.0s/1h30m0s  0/4 iters, 1 per VU
+
+running (0h00m13.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 4 VUs  0h00m13.0s/1h30m0s  0/4 iters, 1 per VU
+
+running (0h00m14.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 4 VUs  0h00m14.0s/1h30m0s  0/4 iters, 1 per VU
+
+running (0h00m15.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 4 VUs  0h00m15.0s/1h30m0s  0/4 iters, 1 per VU
+
+running (0h00m16.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 4 VUs  0h00m16.0s/1h30m0s  0/4 iters, 1 per VU
+
+running (0h00m17.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 4 VUs  0h00m17.0s/1h30m0s  0/4 iters, 1 per VU
+
+running (0h00m18.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 4 VUs  0h00m18.0s/1h30m0s  0/4 iters, 1 per VU
+time="2026-10-04T08:55:09-03:00" level=info msg="d7c4729e6dcf4a6b8927b9f81f5699ff: status=na_fila; desde_conclusao_ms=126; consultas=1" source=console
+
+running (0h00m19.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 4 VUs  0h00m19.0s/1h30m0s  0/4 iters, 1 per VU
+time="2026-10-04T08:55:10-03:00" level=info msg="ae170a7150864126a90ee7463aaea4bb: status=na_fila; desde_conclusao_ms=125; consultas=1" source=console
+
+running (0h00m20.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 4 VUs  0h00m20.0s/1h30m0s  0/4 iters, 1 per VU
+time="2026-10-04T08:55:11-03:00" level=info msg="d7c4729e6dcf4a6b8927b9f81f5699ff: status=processando; desde_conclusao_ms=2255; consultas=2" source=console
+
+running (0h00m21.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 4 VUs  0h00m21.0s/1h30m0s  0/4 iters, 1 per VU
+time="2026-10-04T08:55:13-03:00" level=info msg="ae170a7150864126a90ee7463aaea4bb: status=processando; desde_conclusao_ms=2254; consultas=2" source=console
+
+running (0h00m22.0s), 4/4 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 4 VUs  0h00m22.0s/1h30m0s  0/4 iters, 1 per VU
+time="2026-10-04T08:55:13-03:00" level=info msg="e4df28c1e7b546b9884cc2d5ed72fc4c: status=na_fila; desde_conclusao_ms=126; consultas=1" source=console
+time="2026-10-04T08:55:13-03:00" level=info msg="d7c4729e6dcf4a6b8927b9f81f5699ff: status=pronto; desde_conclusao_ms=4381; consultas=3" source=console
+time="2026-10-04T08:55:13-03:00" level=info msg="d7c4729e6dcf4a6b8927b9f81f5699ff: pronto; linhas=100000; lotes=100; bytes=51888914; envio_ms=17383; ingestao_ms=17936; fila_ms=1571; geracao_ms=1680; ate_get_pronto_ms=4382; ponta_a_ponta_ms=22318; consultas=3" source=console
+time="2026-10-04T08:55:14-03:00" level=info msg="7dbaddc7f73f4f50827e8d1444dd7d1f: status=na_fila; desde_conclusao_ms=125; consultas=1" source=console
+
+running (0h00m23.0s), 3/4 VUs, 1 complete and 0 interrupted iterations
+files   [  25% ] 4 VUs  0h00m23.0s/1h30m0s  1/4 iters, 1 per VU
+time="2026-10-04T08:55:15-03:00" level=info msg="ae170a7150864126a90ee7463aaea4bb: status=pronto; desde_conclusao_ms=4384; consultas=3" source=console
+time="2026-10-04T08:55:15-03:00" level=info msg="ae170a7150864126a90ee7463aaea4bb: pronto; linhas=100000; lotes=100; bytes=51888914; envio_ms=18745; ingestao_ms=19297; fila_ms=1946; geracao_ms=1372; ate_get_pronto_ms=4384; ponta_a_ponta_ms=23681; consultas=3" source=console
+
+running (0h00m24.0s), 2/4 VUs, 2 complete and 0 interrupted iterations
+files   [  50% ] 4 VUs  0h00m24.0s/1h30m0s  2/4 iters, 1 per VU
+time="2026-10-04T08:55:15-03:00" level=info msg="e4df28c1e7b546b9884cc2d5ed72fc4c: status=processando; desde_conclusao_ms=2253; consultas=2" source=console
+
+running (0h00m25.0s), 2/4 VUs, 2 complete and 0 interrupted iterations
+files   [  50% ] 4 VUs  0h00m25.0s/1h30m0s  2/4 iters, 1 per VU
+
+running (0h00m26.0s), 2/4 VUs, 2 complete and 0 interrupted iterations
+files   [  50% ] 4 VUs  0h00m26.0s/1h30m0s  2/4 iters, 1 per VU
+time="2026-10-04T08:55:18-03:00" level=info msg="e4df28c1e7b546b9884cc2d5ed72fc4c: status=pronto; desde_conclusao_ms=4381; consultas=3" source=console
+time="2026-10-04T08:55:18-03:00" level=info msg="e4df28c1e7b546b9884cc2d5ed72fc4c: pronto; linhas=100000; lotes=100; bytes=51888914; envio_ms=21634; ingestao_ms=22188; fila_ms=1345; geracao_ms=1443; ate_get_pronto_ms=4381; ponta_a_ponta_ms=26569; consultas=3" source=console
+time="2026-10-04T08:55:18-03:00" level=info msg="7dbaddc7f73f4f50827e8d1444dd7d1f: status=pronto; desde_conclusao_ms=4378; consultas=3" source=console
+time="2026-10-04T08:55:18-03:00" level=info msg="7dbaddc7f73f4f50827e8d1444dd7d1f: pronto; linhas=100000; lotes=100; bytes=51888914; envio_ms=21957; ingestao_ms=22511; fila_ms=2509; geracao_ms=1710; ate_get_pronto_ms=4379; ponta_a_ponta_ms=26890; consultas=3" source=console
+
+
+  █ THRESHOLDS
+
+    job_success
+    ✓ 'rate==1' rate=100.00%
+
+    test_errors
+    ✓ 'count==0' count=0
+
+
+  █ TOTAL RESULTS
+
+    CUSTOM
+    job_close_ms...................: avg=137.25ms min=135ms    med=137.5ms  max=139ms    p(90)=138.69ms p(95)=138.85ms
+    job_create_ms..................: avg=416ms    min=414ms    med=416ms    max=418ms    p(90)=417.7ms  p(95)=417.85ms
+    job_end_to_end_ms..............: avg=24.86s   min=22.31s   med=25.12s   max=26.89s   p(90)=26.79s   p(95)=26.84s
+    job_generation_ms..............: avg=1.55s    min=1.37s    med=1.56s    max=1.71s    p(90)=1.7s     p(95)=1.7s
+    job_ingest_ms..................: avg=20.48s   min=17.93s   med=20.74s   max=22.51s   p(90)=22.41s   p(95)=22.46s
+    job_output_bytes...............: avg=51888914 min=51888914 med=51888914 max=51888914 p(90)=51888914 p(95)=51888914
+    job_polling_ms.................: avg=4.38s    min=4.37s    med=4.38s    max=4.38s    p(90)=4.38s    p(95)=4.38s
+    job_polls......................: avg=3        min=3        med=3        max=3        p(90)=3        p(95)=3
+    job_queue_ms...................: avg=1.84s    min=1.34s    med=1.75s    max=2.5s     p(90)=2.34s    p(95)=2.42s
+    job_send_ms....................: avg=19.92s   min=17.38s   med=20.18s   max=21.95s   p(90)=21.86s   p(95)=21.9s
+    job_success....................: 100.00% 4 out of 4
+    job_total_ms...................: avg=3.39s    min=2.78s    med=3.28s    max=4.21s    p(90)=3.94s    p(95)=4.08s
+    test_errors....................: 0       0/s
+
+    HTTP
+    http_req_duration..............: avg=1.05s    min=124.47ms med=1.04s    max=2.18s    p(90)=1.75s    p(95)=1.83s
+      { expected_response:true }...: avg=1.05s    min=124.47ms med=1.04s    max=2.18s    p(90)=1.75s    p(95)=1.83s
+    http_req_failed................: 0.00%   0 out of 420
+    http_reqs......................: 420     15.618317/s
+
+    EXECUTION
+    iteration_duration.............: avg=24.86s   min=22.31s   med=25.12s   max=26.89s   p(90)=26.79s   p(95)=26.84s
+    iterations.....................: 4       0.148746/s
+    vus............................: 2       min=2        max=4
+    vus_max........................: 4       min=4        max=4
+
+    NETWORK
+    data_received..................: 606 kB  23 kB/s
+    data_sent......................: 218 MB  8.1 MB/s
+
+
+
+
+running (0h00m26.9s), 0/4 VUs, 4 complete and 0 interrupted iterations
+files ✓ [ 100% ] 4 VUs  0h00m26.9s/1h30m0s  4/4 iters, 1 per VU

@@ -155,6 +155,9 @@ Há uma imagem/tarefa ECS para cada serviço; a configuração inicial é uma ta
 - [Coleção Postman](postman/README.md): fluxos CSV e XLSX executáveis. A pasta `postman/` fica fora das imagens Docker.
 - [Publicação AWS](docs/arquitetura-publicacao-aws.md): diagrama da infraestrutura e fluxo de arquivos.
 - [Resultados de carga](docs/resultado-teste-carga-aws-2026-10-03.md): medições da implantação de demonstração.
+- [Diário comparativo da V2](docs/diario-comparativo-ingestao.md): medições locais e na AWS, incluindo 10 milhões de linhas e quatro arquivos simultâneos.
+- [Benchmarks e logs](benchmarks/README.md): índice dos resultados brutos e dos cenários executados.
+- [Estimativa de custo mensal da V2](docs/estimativa-custo-mensal-v2.md): base contínua e custos variáveis do serviço publicado.
 
 ## Licença
 

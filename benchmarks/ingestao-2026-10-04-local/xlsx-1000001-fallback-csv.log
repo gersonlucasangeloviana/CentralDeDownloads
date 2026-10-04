@@ -1,0 +1,80 @@
+
+         /\      Grafana   /‾‾/
+    /\  /  \     |\  __   /  /
+   /  \/    \    | |/ /  /   ‾‾\
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/
+
+
+     execution: local
+        script: tests/worker-load.k6.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 1 max VUs, 1h30m30s max duration (incl. graceful stop):
+              * files: 1 iterations for each of 1 VUs (maxDuration: 1h30m0s, gracefulStop: 30s)
+
+
+running (0h00m01.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m01.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m02.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m02.0s/1h30m0s  0/1 iters, 1 per VU
+time="2026-10-04T08:14:40-03:00" level=info msg="fdcac7be7a7a4871bcc121af33f0cc7e: envio=1000000/1000001 linhas; lotes=1000; tempo_ms=2354" source=console
+time="2026-10-04T08:14:40-03:00" level=info msg="fdcac7be7a7a4871bcc121af33f0cc7e: status=na_fila; desde_conclusao_ms=1; consultas=1" source=console
+
+running (0h00m03.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m03.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m04.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m04.0s/1h30m0s  0/1 iters, 1 per VU
+time="2026-10-04T08:14:42-03:00" level=info msg="fdcac7be7a7a4871bcc121af33f0cc7e: status=pronto; desde_conclusao_ms=2004; consultas=2" source=console
+time="2026-10-04T08:14:42-03:00" level=info msg="fdcac7be7a7a4871bcc121af33f0cc7e: pronto; linhas=1000001; lotes=1001; bytes=8888925; envio_ms=2356; ingestao_ms=2363; fila_ms=433; geracao_ms=481; ate_get_pronto_ms=2004; ponta_a_ponta_ms=4367; consultas=2" source=console
+
+
+  █ THRESHOLDS
+
+    job_success
+    ✓ 'rate==1' rate=100.00%
+
+    test_errors
+    ✓ 'count==0' count=0
+
+
+  █ TOTAL RESULTS
+
+    CUSTOM
+    job_close_ms...................: avg=2ms     min=2ms     med=2ms     max=2ms     p(90)=2ms     p(95)=2ms
+    job_create_ms..................: avg=5ms     min=5ms     med=5ms     max=5ms     p(90)=5ms     p(95)=5ms
+    job_end_to_end_ms..............: avg=4.36s   min=4.36s   med=4.36s   max=4.36s   p(90)=4.36s   p(95)=4.36s
+    job_generation_ms..............: avg=481ms   min=481ms   med=481ms   max=481ms   p(90)=481ms   p(95)=481ms
+    job_ingest_ms..................: avg=2.36s   min=2.36s   med=2.36s   max=2.36s   p(90)=2.36s   p(95)=2.36s
+    job_output_bytes...............: avg=8888925 min=8888925 med=8888925 max=8888925 p(90)=8888925 p(95)=8888925
+    job_polling_ms.................: avg=2s      min=2s      med=2s      max=2s      p(90)=2s      p(95)=2s
+    job_polls......................: avg=2       min=2       med=2       max=2       p(90)=2       p(95)=2
+    job_queue_ms...................: avg=433ms   min=433ms   med=433ms   max=433ms   p(90)=433ms   p(95)=433ms
+    job_send_ms....................: avg=2.35s   min=2.35s   med=2.35s   max=2.35s   p(90)=2.35s   p(95)=2.35s
+    job_success....................: 100.00% 1 out of 1
+    job_total_ms...................: avg=914ms   min=914ms   med=914ms   max=914ms   p(90)=914ms   p(95)=914ms
+    test_errors....................: 0       0/s
+
+    HTTP
+    http_req_duration..............: avg=4.36ms  min=362µs   med=3.7ms   max=20.41ms p(90)=6.3ms   p(95)=7.73ms
+      { expected_response:true }...: avg=4.36ms  min=362µs   med=3.7ms   max=20.41ms p(90)=6.3ms   p(95)=7.73ms
+    http_req_failed................: 0.00%   0 out of 1005
+    http_reqs......................: 1005    230.112183/s
+
+    EXECUTION
+    iteration_duration.............: avg=4.36s   min=4.36s   med=4.36s   max=4.36s   p(90)=4.36s   p(95)=4.36s
+    iterations.....................: 1       0.228967/s
+    vus............................: 1       min=1         max=1
+    vus_max........................: 1       min=1         max=1
+
+    NETWORK
+    data_received..................: 378 kB  87 kB/s
+    data_sent......................: 33 MB   7.6 MB/s
+
+
+
+
+running (0h00m04.4s), 0/1 VUs, 1 complete and 0 interrupted iterations
+files ✓ [ 100% ] 1 VUs  0h00m04.4s/1h30m0s  1/1 iters, 1 per VU

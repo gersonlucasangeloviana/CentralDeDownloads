@@ -1,0 +1,73 @@
+
+         /\      Grafana   /‾‾/
+    /\  /  \     |\  __   /  /
+   /  \/    \    | |/ /  /   ‾‾\
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/
+
+
+     execution: local
+        script: tests/worker-load.k6.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 1 max VUs, 1h30m30s max duration (incl. graceful stop):
+              * files: 1 iterations for each of 1 VUs (maxDuration: 1h30m0s, gracefulStop: 30s)
+
+time="2026-10-04T08:20:19-03:00" level=info msg="d1a646c01b6d4a46b06af2cefd6b9725: status=na_fila; desde_conclusao_ms=1; consultas=1" source=console
+
+running (0h00m01.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m01.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m02.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m02.0s/1h30m0s  0/1 iters, 1 per VU
+time="2026-10-04T08:20:21-03:00" level=info msg="d1a646c01b6d4a46b06af2cefd6b9725: status=pronto; desde_conclusao_ms=2010; consultas=2" source=console
+time="2026-10-04T08:20:21-03:00" level=info msg="d1a646c01b6d4a46b06af2cefd6b9725: pronto; linhas=20000; lotes=20; bytes=6330802; envio_ms=833; ingestao_ms=850; fila_ms=1124; geracao_ms=310; ate_get_pronto_ms=2012; ponta_a_ponta_ms=2862; consultas=2" source=console
+
+
+  █ THRESHOLDS
+
+    job_success
+    ✓ 'rate==1' rate=100.00%
+
+    test_errors
+    ✓ 'count==0' count=0
+
+
+  █ TOTAL RESULTS
+
+    CUSTOM
+    job_close_ms...................: avg=3ms     min=3ms     med=3ms     max=3ms     p(90)=3ms     p(95)=3ms
+    job_create_ms..................: avg=14ms    min=14ms    med=14ms    max=14ms    p(90)=14ms    p(95)=14ms
+    job_end_to_end_ms..............: avg=2.86s   min=2.86s   med=2.86s   max=2.86s   p(90)=2.86s   p(95)=2.86s
+    job_generation_ms..............: avg=310ms   min=310ms   med=310ms   max=310ms   p(90)=310ms   p(95)=310ms
+    job_ingest_ms..................: avg=850ms   min=850ms   med=850ms   max=850ms   p(90)=850ms   p(95)=850ms
+    job_output_bytes...............: avg=6330802 min=6330802 med=6330802 max=6330802 p(90)=6330802 p(95)=6330802
+    job_polling_ms.................: avg=2.01s   min=2.01s   med=2.01s   max=2.01s   p(90)=2.01s   p(95)=2.01s
+    job_polls......................: avg=2       min=2       med=2       max=2       p(90)=2       p(95)=2
+    job_queue_ms...................: avg=1.12s   min=1.12s   med=1.12s   max=1.12s   p(90)=1.12s   p(95)=1.12s
+    job_send_ms....................: avg=833ms   min=833ms   med=833ms   max=833ms   p(90)=833ms   p(95)=833ms
+    job_success....................: 100.00% 1 out of 1
+    job_total_ms...................: avg=1.43s   min=1.43s   med=1.43s   max=1.43s   p(90)=1.43s   p(95)=1.43s
+    test_errors....................: 0       0/s
+
+    HTTP
+    http_req_duration..............: avg=23.98ms min=455µs   med=22.76ms max=37.68ms p(90)=37.1ms  p(95)=37.59ms
+      { expected_response:true }...: avg=23.98ms min=455µs   med=22.76ms max=37.68ms p(90)=37.1ms  p(95)=37.59ms
+    http_req_failed................: 0.00%   0 out of 24
+    http_reqs......................: 24      8.382189/s
+
+    EXECUTION
+    iteration_duration.............: avg=2.86s   min=2.86s   med=2.86s   max=2.86s   p(90)=2.86s   p(95)=2.86s
+    iterations.....................: 1       0.349258/s
+    vus............................: 1       min=1       max=1
+    vus_max........................: 1       min=1       max=1
+
+    NETWORK
+    data_received..................: 10 kB   3.5 kB/s
+    data_sent......................: 11 MB   3.8 MB/s
+
+
+
+
+running (0h00m02.9s), 0/1 VUs, 1 complete and 0 interrupted iterations
+files ✓ [ 100% ] 1 VUs  0h00m02.9s/1h30m0s  1/1 iters, 1 per VU

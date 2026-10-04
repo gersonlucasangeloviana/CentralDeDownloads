@@ -1,0 +1,128 @@
+
+         /\      Grafana   /‾‾/
+    /\  /  \     |\  __   /  /
+   /  \/    \    | |/ /  /   ‾‾\
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/
+
+
+     execution: local
+        script: tests/worker-load.k6.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 1 max VUs, 1h30m30s max duration (incl. graceful stop):
+              * files: 1 iterations for each of 1 VUs (maxDuration: 1h30m0s, gracefulStop: 30s)
+
+
+running (0h00m01.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m01.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m02.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m02.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m03.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m03.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m04.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m04.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m05.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m05.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m06.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m06.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m07.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m07.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m08.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m08.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m09.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m09.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m10.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m10.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m11.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m11.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m12.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m12.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m13.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m13.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m14.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m14.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m15.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m15.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m16.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m16.0s/1h30m0s  0/1 iters, 1 per VU
+time="2026-10-04T08:44:45-03:00" level=info msg="37e452c91d984b98b0bf55dfe5dba3d9: status=na_fila; desde_conclusao_ms=128; consultas=1" source=console
+
+running (0h00m17.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m17.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m18.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m18.0s/1h30m0s  0/1 iters, 1 per VU
+time="2026-10-04T08:44:47-03:00" level=info msg="37e452c91d984b98b0bf55dfe5dba3d9: status=processando; desde_conclusao_ms=2260; consultas=2" source=console
+
+running (0h00m19.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m19.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m20.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m20.0s/1h30m0s  0/1 iters, 1 per VU
+time="2026-10-04T08:44:49-03:00" level=info msg="37e452c91d984b98b0bf55dfe5dba3d9: status=pronto; desde_conclusao_ms=4391; consultas=3" source=console
+time="2026-10-04T08:44:49-03:00" level=info msg="37e452c91d984b98b0bf55dfe5dba3d9: pronto; linhas=100000; lotes=100; bytes=51888914; envio_ms=15797; ingestao_ms=16348; fila_ms=646; geracao_ms=1624; ate_get_pronto_ms=4391; ponta_a_ponta_ms=20739; consultas=3" source=console
+
+
+  █ THRESHOLDS
+
+    job_success
+    ✓ 'rate==1' rate=100.00%
+
+    test_errors
+    ✓ 'count==0' count=0
+
+
+  █ TOTAL RESULTS
+
+    CUSTOM
+    job_close_ms...................: avg=142ms    min=142ms    med=142ms    max=142ms    p(90)=142ms    p(95)=142ms
+    job_create_ms..................: avg=409ms    min=409ms    med=409ms    max=409ms    p(90)=409ms    p(95)=409ms
+    job_end_to_end_ms..............: avg=20.73s   min=20.73s   med=20.73s   max=20.73s   p(90)=20.73s   p(95)=20.73s
+    job_generation_ms..............: avg=1.62s    min=1.62s    med=1.62s    max=1.62s    p(90)=1.62s    p(95)=1.62s
+    job_ingest_ms..................: avg=16.34s   min=16.34s   med=16.34s   max=16.34s   p(90)=16.34s   p(95)=16.34s
+    job_output_bytes...............: avg=51888914 min=51888914 med=51888914 max=51888914 p(90)=51888914 p(95)=51888914
+    job_polling_ms.................: avg=4.39s    min=4.39s    med=4.39s    max=4.39s    p(90)=4.39s    p(95)=4.39s
+    job_polls......................: avg=3        min=3        med=3        max=3        p(90)=3        p(95)=3
+    job_queue_ms...................: avg=646ms    min=646ms    med=646ms    max=646ms    p(90)=646ms    p(95)=646ms
+    job_send_ms....................: avg=15.79s   min=15.79s   med=15.79s   max=15.79s   p(90)=15.79s   p(95)=15.79s
+    job_success....................: 100.00% 1 out of 1
+    job_total_ms...................: avg=2.27s    min=2.27s    med=2.27s    max=2.27s    p(90)=2.27s    p(95)=2.27s
+    test_errors....................: 0       0/s
+
+    HTTP
+    http_req_duration..............: avg=718.19ms min=127.98ms med=654.45ms max=1.79s    p(90)=1.27s    p(95)=1.68s
+      { expected_response:true }...: avg=718.19ms min=127.98ms med=654.45ms max=1.79s    p(90)=1.27s    p(95)=1.68s
+    http_req_failed................: 0.00%   0 out of 105
+    http_reqs......................: 105     5.062811/s
+
+    EXECUTION
+    iteration_duration.............: avg=20.73s   min=20.73s   med=20.73s   max=20.73s   p(90)=20.73s   p(95)=20.73s
+    iterations.....................: 1       0.048217/s
+    vus............................: 1       min=1        max=1
+    vus_max........................: 1       min=1        max=1
+
+    NETWORK
+    data_received..................: 153 kB  7.4 kB/s
+    data_sent......................: 54 MB   2.6 MB/s
+
+
+
+
+running (0h00m20.7s), 0/1 VUs, 1 complete and 0 interrupted iterations
+files ✓ [ 100% ] 1 VUs  0h00m20.7s/1h30m0s  1/1 iters, 1 per VU

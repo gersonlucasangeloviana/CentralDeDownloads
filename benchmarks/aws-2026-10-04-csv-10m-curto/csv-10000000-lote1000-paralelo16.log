@@ -1,0 +1,634 @@
+
+         /\      Grafana   /‾‾/
+    /\  /  \     |\  __   /  /
+   /  \/    \    | |/ /  /   ‾‾\
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/
+
+
+     execution: local
+        script: tests/worker-load.k6.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 1 max VUs, 1h30m30s max duration (incl. graceful stop):
+              * files: 1 iterations for each of 1 VUs (maxDuration: 1h30m0s, gracefulStop: 30s)
+
+
+running (0h00m01.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m01.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m02.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m02.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m03.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m03.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m04.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m04.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m05.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m05.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m06.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m06.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m07.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m07.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m08.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m08.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m09.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m09.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m10.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m10.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m11.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m11.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m12.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m12.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m13.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m13.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m14.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m14.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m15.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m15.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m16.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m16.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m17.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m17.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m18.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m18.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m19.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m19.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m20.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m20.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m21.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m21.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m22.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m22.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m23.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m23.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m24.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m24.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m25.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m25.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m26.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m26.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m27.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m27.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m28.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m28.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m29.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m29.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m30.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m30.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m31.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m31.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m32.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m32.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m33.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m33.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m34.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m34.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m35.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m35.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m36.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m36.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m37.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m37.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m38.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m38.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m39.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m39.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m40.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m40.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m41.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m41.0s/1h30m0s  0/1 iters, 1 per VU
+time="2026-10-04T09:08:49-03:00" level=info msg="1de57da75ac7414b80c099002894f4c1: envio=2000000/10000000 linhas; lotes=2000; tempo_ms=40813" source=console
+
+running (0h00m42.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m42.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m43.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m43.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m44.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m44.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m45.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m45.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m46.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m46.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m47.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m47.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m48.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m48.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m49.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m49.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m50.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m50.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m51.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m51.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m52.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m52.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m53.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m53.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m54.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m54.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m55.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m55.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m56.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m56.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m57.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m57.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m58.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m58.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h00m59.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h00m59.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m00.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m00.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m01.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m01.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m02.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m02.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m03.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m03.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m04.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m04.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m05.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m05.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m06.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m06.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m07.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m07.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m08.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m08.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m09.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m09.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m10.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m10.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m11.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m11.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m12.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m12.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m13.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m13.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m14.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m14.0s/1h30m0s  0/1 iters, 1 per VU
+time="2026-10-04T09:09:22-03:00" level=info msg="1de57da75ac7414b80c099002894f4c1: envio=4000000/10000000 linhas; lotes=4000; tempo_ms=73962" source=console
+
+running (0h01m15.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m15.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m16.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m16.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m17.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m17.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m18.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m18.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m19.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m19.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m20.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m20.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m21.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m21.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m22.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m22.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m23.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m23.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m24.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m24.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m25.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m25.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m26.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m26.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m27.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m27.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m28.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m28.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m29.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m29.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m30.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m30.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m31.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m31.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m32.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m32.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m33.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m33.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m34.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m34.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m35.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m35.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m36.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m36.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m37.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m37.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m38.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m38.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m39.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m39.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m40.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m40.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m41.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m41.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m42.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m42.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m43.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m43.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m44.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m44.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m45.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m45.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m46.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m46.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m47.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m47.0s/1h30m0s  0/1 iters, 1 per VU
+time="2026-10-04T09:09:55-03:00" level=info msg="1de57da75ac7414b80c099002894f4c1: envio=6000000/10000000 linhas; lotes=6000; tempo_ms=107270" source=console
+
+running (0h01m48.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m48.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m49.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m49.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m50.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m50.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m51.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m51.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m52.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m52.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m53.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m53.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m54.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m54.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m55.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m55.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m56.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m56.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m57.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m57.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m58.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m58.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h01m59.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h01m59.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m00.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m00.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m01.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m01.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m02.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m02.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m03.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m03.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m04.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m04.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m05.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m05.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m06.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m06.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m07.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m07.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m08.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m08.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m09.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m09.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m10.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m10.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m11.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m11.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m12.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m12.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m13.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m13.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m14.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m14.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m15.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m15.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m16.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m16.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m17.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m17.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m18.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m18.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m19.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m19.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m20.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m20.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m21.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m21.0s/1h30m0s  0/1 iters, 1 per VU
+time="2026-10-04T09:10:29-03:00" level=info msg="1de57da75ac7414b80c099002894f4c1: envio=8000000/10000000 linhas; lotes=8000; tempo_ms=140577" source=console
+
+running (0h02m22.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m22.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m23.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m23.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m24.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m24.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m25.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m25.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m26.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m26.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m27.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m27.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m28.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m28.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m29.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m29.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m30.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m30.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m31.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m31.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m32.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m32.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m33.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m33.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m34.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m34.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m35.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m35.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m36.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m36.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m37.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m37.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m38.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m38.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m39.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m39.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m40.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m40.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m41.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m41.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m42.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m42.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m43.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m43.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m44.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m44.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m45.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m45.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m46.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m46.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m47.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m47.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m48.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m48.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m49.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m49.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m50.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m50.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m51.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m51.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m52.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m52.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m53.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m53.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m54.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m54.0s/1h30m0s  0/1 iters, 1 per VU
+time="2026-10-04T09:11:02-03:00" level=info msg="1de57da75ac7414b80c099002894f4c1: envio=10000000/10000000 linhas; lotes=10000; tempo_ms=174374" source=console
+
+running (0h02m55.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m55.0s/1h30m0s  0/1 iters, 1 per VU
+time="2026-10-04T09:11:03-03:00" level=info msg="1de57da75ac7414b80c099002894f4c1: status=na_fila; desde_conclusao_ms=126; consultas=1" source=console
+
+running (0h02m56.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m56.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m57.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m57.0s/1h30m0s  0/1 iters, 1 per VU
+time="2026-10-04T09:11:05-03:00" level=info msg="1de57da75ac7414b80c099002894f4c1: status=processando; desde_conclusao_ms=2255; consultas=2" source=console
+
+running (0h02m58.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m58.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h02m59.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h02m59.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h03m00.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h03m00.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h03m01.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h03m01.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h03m02.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h03m02.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h03m03.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h03m03.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h03m04.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h03m04.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h03m05.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h03m05.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h03m06.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h03m06.0s/1h30m0s  0/1 iters, 1 per VU
+
+running (0h03m07.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+files   [   0% ] 1 VUs  0h03m07.0s/1h30m0s  0/1 iters, 1 per VU
+time="2026-10-04T09:11:15-03:00" level=info msg="1de57da75ac7414b80c099002894f4c1: status=pronto; desde_conclusao_ms=12892; consultas=7" source=console
+time="2026-10-04T09:11:15-03:00" level=info msg="1de57da75ac7414b80c099002894f4c1: pronto; linhas=10000000; lotes=10000; bytes=98888916; envio_ms=174374; ingestao_ms=174953; fila_ms=1552; geracao_ms=9877; ate_get_pronto_ms=12894; ponta_a_ponta_ms=187847; consultas=7" source=console
+
+
+  █ THRESHOLDS
+
+    job_success
+    ✓ 'rate==1' rate=100.00%
+
+    test_errors
+    ✓ 'count==0' count=0
+
+
+  █ TOTAL RESULTS
+
+    CUSTOM
+    job_close_ms...................: avg=136ms    min=136ms    med=136ms    max=136ms    p(90)=136ms    p(95)=136ms
+    job_create_ms..................: avg=443ms    min=443ms    med=443ms    max=443ms    p(90)=443ms    p(95)=443ms
+    job_end_to_end_ms..............: avg=3m7s     min=3m7s     med=3m7s     max=3m7s     p(90)=3m7s     p(95)=3m7s
+    job_generation_ms..............: avg=9.87s    min=9.87s    med=9.87s    max=9.87s    p(90)=9.87s    p(95)=9.87s
+    job_ingest_ms..................: avg=2m54s    min=2m54s    med=2m54s    max=2m54s    p(90)=2m54s    p(95)=2m54s
+    job_output_bytes...............: avg=98888916 min=98888916 med=98888916 max=98888916 p(90)=98888916 p(95)=98888916
+    job_polling_ms.................: avg=12.89s   min=12.89s   med=12.89s   max=12.89s   p(90)=12.89s   p(95)=12.89s
+    job_polls......................: avg=7        min=7        med=7        max=7        p(90)=7        p(95)=7
+    job_queue_ms...................: avg=1.55s    min=1.55s    med=1.55s    max=1.55s    p(90)=1.55s    p(95)=1.55s
+    job_send_ms....................: avg=2m54s    min=2m54s    med=2m54s    max=2m54s    p(90)=2m54s    p(95)=2m54s
+    job_success....................: 100.00% 1 out of 1
+    job_total_ms...................: avg=11.42s   min=11.42s   med=11.42s   max=11.42s   p(90)=11.42s   p(95)=11.42s
+    test_errors....................: 0       0/s
+
+    HTTP
+    http_req_duration..............: avg=193.64ms min=124.75ms med=186.71ms max=3.11s    p(90)=220.39ms p(95)=225.97ms
+      { expected_response:true }...: avg=193.64ms min=124.75ms med=186.71ms max=3.11s    p(90)=220.39ms p(95)=225.97ms
+    http_req_failed................: 0.00%   0 out of 10009
+    http_reqs......................: 10009   53.282461/s
+
+    EXECUTION
+    iteration_duration.............: avg=3m7s     min=3m7s     med=3m7s     max=3m7s     p(90)=3m7s     p(95)=3m7s
+    iterations.....................: 1       0.005323/s
+    vus............................: 1       min=1          max=1
+    vus_max........................: 1       min=1          max=1
+
+    NETWORK
+    data_received..................: 3.6 MB  19 kB/s
+    data_sent......................: 341 MB  1.8 MB/s
+
+
+
+
+running (0h03m07.8s), 0/1 VUs, 1 complete and 0 interrupted iterations
+files ✓ [ 100% ] 1 VUs  0h03m07.8s/1h30m0s  1/1 iters, 1 per VU
