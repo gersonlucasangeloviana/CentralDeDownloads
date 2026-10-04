@@ -1,0 +1,6 @@
+# Copie para backend.hcl após aplicar infra/aws/state.
+bucket       = "NOME_DO_BUCKET_DE_ESTADO"
+key          = "gerador-excel/prod/terraform.tfstate"
+region       = "us-east-1"
+encrypt      = true
+use_lockfile = true

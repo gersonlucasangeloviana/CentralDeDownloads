@@ -1,0 +1,594 @@
+{
+  "info": {
+    "name": "GeradorExcel - fluxos de geração",
+    "description": "Dois roteiros executáveis: CSV com um lote e XLSX com três lotes. Configure baseUrl e apiKey nas variáveis da coleção e execute uma pasta no Collection Runner com Delay de 2000 ms.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01 - Simples: CSV com 1 lote",
+      "description": "5 chamadas: criar, enviar, concluir, consultar e baixar.",
+      "item": [
+        {
+          "name": "01 Criar CSV",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/v1/arquivos",
+            "description": "Cria um CSV sem período nem notificações. Guarde o id capturado automaticamente.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Exemplo Postman - 1 lote\",\n  \"formato\": \"csv\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Criação retorna 201\", () => pm.response.to.have.status(201));",
+                  "let job = {};",
+                  "try { job = pm.response.json(); } catch (error) {}",
+                  "pm.test(\"Resposta contém id e status recebendo\", () => {",
+                  "    pm.expect(job.id).to.be.a(\"string\").and.not.empty;",
+                  "    pm.expect(job.status).to.eql(\"recebendo\");",
+                  "});",
+                  "if (pm.response.code === 201 && job.id) {",
+                  "    pm.collectionVariables.set(\"simpleJobId\", job.id);",
+                  "    pm.collectionVariables.unset(\"simpleDownloadUrl\");",
+                  "    pm.collectionVariables.set(\"simplePollCount\", \"0\");",
+                  "} else {",
+                  "    pm.execution.setNextRequest(null);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "02 Enviar lote único",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/v1/arquivos/{{simpleJobId}}/lotes",
+            "description": "Dois pedidos planos. Não envie mais de 100 registros em um lote.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{simpleJobId}}\",\n  \"dados\": [\n    {\n      \"Pedido\": \"PED-1001\",\n      \"Cliente\": \"Ana\",\n      \"Valor\": 149.9\n    },\n    {\n      \"Pedido\": \"PED-1002\",\n      \"Cliente\": \"Bia\",\n      \"Valor\": 250.0\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Lote retorna 202\", () => pm.response.to.have.status(202));",
+                  "let batch = {};",
+                  "try { batch = pm.response.json(); } catch (error) {}",
+                  "pm.test(\"Lote e sequência confirmados\", () => {",
+                  "    pm.expect(batch.id).to.eql(pm.collectionVariables.get(\"simpleJobId\"));",
+                  "    pm.expect(batch.sequencia).to.eql(1);",
+                  "    pm.expect(batch.totalItens).to.eql(2);",
+                  "});",
+                  "if (pm.response.code !== 202) pm.execution.setNextRequest(null);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "03 Concluir com totais",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/v1/arquivos/{{simpleJobId}}/concluir",
+            "description": "Conclui o envio. Totais divergentes causam falha permanente do trabalho.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"totalLotes\": 1,\n  \"totalItens\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Conclusão retorna 202\", () => pm.response.to.have.status(202));",
+                  "let job = {};",
+                  "try { job = pm.response.json(); } catch (error) {}",
+                  "pm.test(\"Totais recebidos sem divergência\", () => {",
+                  "    pm.expect(job.totalLotes).to.eql(1);",
+                  "    pm.expect(job.totalItens).to.eql(2);",
+                  "    pm.expect(job.status).not.to.eql(\"falhou\");",
+                  "});",
+                  "if (pm.response.code !== 202) pm.execution.setNextRequest(null);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "04 Consultar status até pronto",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/v1/arquivos/{{simpleJobId}}",
+            "description": "No Collection Runner, repete esta consulta enquanto o worker processa. Não reenvia lotes."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Consulta retorna 200\", () => pm.response.to.have.status(200));",
+                  "let job = {};",
+                  "try { job = pm.response.json(); } catch (error) {}",
+                  "if (pm.response.code !== 200) {",
+                  "    pm.execution.setNextRequest(null);",
+                  "} else if (job.status === \"pronto\") {",
+                  "    pm.test(\"Arquivo pronto com totais corretos e link\", () => {",
+                  "        pm.expect(job.totalLotes).to.eql(1);",
+                  "        pm.expect(job.totalItens).to.eql(2);",
+                  "        pm.expect(job.linkDownload).to.match(/^https?:\\/\\//);",
+                  "    });",
+                  "    if (job.linkDownload) pm.collectionVariables.set(\"simpleDownloadUrl\", job.linkDownload);",
+                  "    else pm.execution.setNextRequest(null);",
+                  "} else if (job.status === \"falhou\" || job.status === \"expirou\") {",
+                  "    pm.test(\"Geração sem erro\", () => { throw new Error(job.erro || job.status); });",
+                  "    pm.execution.setNextRequest(null);",
+                  "} else {",
+                  "    const count = Number(pm.collectionVariables.get(\"simplePollCount\") || 0) + 1;",
+                  "    pm.collectionVariables.set(\"simplePollCount\", String(count));",
+                  "    if (count >= 180) {",
+                  "        pm.test(\"Arquivo pronto em até 180 consultas\", () => { throw new Error(\"Último status: \" + job.status); });",
+                  "        pm.execution.setNextRequest(null);",
+                  "    } else {",
+                  "        pm.test(\"Status de processamento válido\", () =>",
+                  "            pm.expect([\"recebendo\", \"fechando\", \"na_fila\", \"processando\"]).to.include(job.status));",
+                  "        pm.execution.setNextRequest(pm.info.requestId);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "05 Baixar CSV pelo link",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{simpleDownloadUrl}}",
+            "description": "Abre linkDownload, sem X-Api-Key. Mantenha Follow redirects ativado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Download retorna 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"CSV contém cabeçalho e duas linhas\", () => {",
+                  "    const rows = pm.response.text().replace(/^\\uFEFF/, \"\").trimEnd().split(/\\r?\\n/);",
+                  "    pm.expect(rows).to.have.lengthOf(3);",
+                  "    pm.expect(rows[0]).to.eql(\"Pedido;Cliente;Valor\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "02 - Completo: XLSX com 3 lotes",
+      "description": "7 chamadas: criar, enviar 3 lotes, concluir, consultar e baixar.",
+      "item": [
+        {
+          "name": "01 Criar XLSX com período",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/v1/arquivos",
+            "description": "Período é metadado opcional. Para testar notificações, adicione webhook e/ou email válidos.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Exemplo Postman - 3 lotes\",\n  \"formato\": \"xlsx\",\n  \"periodo\": {\n    \"inicio\": \"2026-09-01\",\n    \"fim\": \"2026-09-30\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Criação retorna 201\", () => pm.response.to.have.status(201));",
+                  "let job = {};",
+                  "try { job = pm.response.json(); } catch (error) {}",
+                  "pm.test(\"Resposta contém id e status recebendo\", () => {",
+                  "    pm.expect(job.id).to.be.a(\"string\").and.not.empty;",
+                  "    pm.expect(job.status).to.eql(\"recebendo\");",
+                  "});",
+                  "if (pm.response.code === 201 && job.id) {",
+                  "    pm.collectionVariables.set(\"completeJobId\", job.id);",
+                  "    pm.collectionVariables.unset(\"completeDownloadUrl\");",
+                  "    pm.collectionVariables.set(\"completePollCount\", \"0\");",
+                  "} else {",
+                  "    pm.execution.setNextRequest(null);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "02 Enviar lote 1",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/v1/arquivos/{{completeJobId}}/lotes",
+            "description": "idLote é apenas um identificador de rastreamento; não deduplica reenvios.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{completeJobId}}\",\n  \"idLote\": \"lote-001\",\n  \"dados\": [\n    {\n      \"Pedido\": \"PED-2001\",\n      \"Data\": \"2026-09-01\",\n      \"Cliente\": \"Ana\",\n      \"Valor\": 149.9,\n      \"Pago\": true\n    },\n    {\n      \"Pedido\": \"PED-2002\",\n      \"Data\": \"2026-09-01\",\n      \"Cliente\": \"Bia\",\n      \"Valor\": 250.0,\n      \"Pago\": false\n    },\n    {\n      \"Pedido\": \"PED-2003\",\n      \"Data\": \"2026-09-02\",\n      \"Cliente\": \"Caio\",\n      \"Valor\": 85.5,\n      \"Pago\": true\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Lote retorna 202\", () => pm.response.to.have.status(202));",
+                  "let batch = {};",
+                  "try { batch = pm.response.json(); } catch (error) {}",
+                  "pm.test(\"Lote e sequência confirmados\", () => {",
+                  "    pm.expect(batch.id).to.eql(pm.collectionVariables.get(\"completeJobId\"));",
+                  "    pm.expect(batch.sequencia).to.eql(1);",
+                  "    pm.expect(batch.totalItens).to.eql(3);",
+                  "});",
+                  "if (pm.response.code !== 202) pm.execution.setNextRequest(null);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "03 Enviar lote 2",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/v1/arquivos/{{completeJobId}}/lotes",
+            "description": "idLote é apenas um identificador de rastreamento; não deduplica reenvios.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{completeJobId}}\",\n  \"idLote\": \"lote-002\",\n  \"dados\": [\n    {\n      \"Pedido\": \"PED-2004\",\n      \"Data\": \"2026-09-03\",\n      \"Cliente\": \"Duda\",\n      \"Valor\": 99.0,\n      \"Pago\": true\n    },\n    {\n      \"Pedido\": \"PED-2005\",\n      \"Data\": \"2026-09-03\",\n      \"Cliente\": \"Eva\",\n      \"Valor\": 310.75,\n      \"Pago\": false\n    },\n    {\n      \"Pedido\": \"PED-2006\",\n      \"Data\": \"2026-09-04\",\n      \"Cliente\": \"Fábio\",\n      \"Valor\": 120.0,\n      \"Pago\": true\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Lote retorna 202\", () => pm.response.to.have.status(202));",
+                  "let batch = {};",
+                  "try { batch = pm.response.json(); } catch (error) {}",
+                  "pm.test(\"Lote e sequência confirmados\", () => {",
+                  "    pm.expect(batch.id).to.eql(pm.collectionVariables.get(\"completeJobId\"));",
+                  "    pm.expect(batch.sequencia).to.eql(2);",
+                  "    pm.expect(batch.totalItens).to.eql(3);",
+                  "});",
+                  "if (pm.response.code !== 202) pm.execution.setNextRequest(null);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "04 Enviar lote 3",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/v1/arquivos/{{completeJobId}}/lotes",
+            "description": "idLote é apenas um identificador de rastreamento; não deduplica reenvios.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{completeJobId}}\",\n  \"idLote\": \"lote-003\",\n  \"dados\": [\n    {\n      \"Pedido\": \"PED-2007\",\n      \"Data\": \"2026-09-05\",\n      \"Cliente\": \"Gabi\",\n      \"Valor\": 45.25,\n      \"Pago\": true\n    },\n    {\n      \"Pedido\": \"PED-2008\",\n      \"Data\": \"2026-09-05\",\n      \"Cliente\": \"Hugo\",\n      \"Valor\": 170.0,\n      \"Pago\": false\n    },\n    {\n      \"Pedido\": \"PED-2009\",\n      \"Data\": \"2026-09-06\",\n      \"Cliente\": \"Iara\",\n      \"Valor\": 199.99,\n      \"Pago\": true\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Lote retorna 202\", () => pm.response.to.have.status(202));",
+                  "let batch = {};",
+                  "try { batch = pm.response.json(); } catch (error) {}",
+                  "pm.test(\"Lote e sequência confirmados\", () => {",
+                  "    pm.expect(batch.id).to.eql(pm.collectionVariables.get(\"completeJobId\"));",
+                  "    pm.expect(batch.sequencia).to.eql(3);",
+                  "    pm.expect(batch.totalItens).to.eql(3);",
+                  "});",
+                  "if (pm.response.code !== 202) pm.execution.setNextRequest(null);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "05 Concluir com totais",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/v1/arquivos/{{completeJobId}}/concluir",
+            "description": "Aguarde os três lotes antes desta chamada. Confere 3 lotes e 9 itens.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"totalLotes\": 3,\n  \"totalItens\": 9\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Conclusão retorna 202\", () => pm.response.to.have.status(202));",
+                  "let job = {};",
+                  "try { job = pm.response.json(); } catch (error) {}",
+                  "pm.test(\"Totais recebidos sem divergência\", () => {",
+                  "    pm.expect(job.totalLotes).to.eql(3);",
+                  "    pm.expect(job.totalItens).to.eql(9);",
+                  "    pm.expect(job.status).not.to.eql(\"falhou\");",
+                  "});",
+                  "if (pm.response.code !== 202) pm.execution.setNextRequest(null);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "06 Consultar status até pronto",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Api-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/v1/arquivos/{{completeJobId}}",
+            "description": "No Collection Runner, repete a consulta até pronto ou falhou."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Consulta retorna 200\", () => pm.response.to.have.status(200));",
+                  "let job = {};",
+                  "try { job = pm.response.json(); } catch (error) {}",
+                  "if (pm.response.code !== 200) {",
+                  "    pm.execution.setNextRequest(null);",
+                  "} else if (job.status === \"pronto\") {",
+                  "    pm.test(\"Arquivo pronto com totais corretos e link\", () => {",
+                  "        pm.expect(job.totalLotes).to.eql(3);",
+                  "        pm.expect(job.totalItens).to.eql(9);",
+                  "        pm.expect(job.linkDownload).to.match(/^https?:\\/\\//);",
+                  "    });",
+                  "    if (job.linkDownload) pm.collectionVariables.set(\"completeDownloadUrl\", job.linkDownload);",
+                  "    else pm.execution.setNextRequest(null);",
+                  "} else if (job.status === \"falhou\" || job.status === \"expirou\") {",
+                  "    pm.test(\"Geração sem erro\", () => { throw new Error(job.erro || job.status); });",
+                  "    pm.execution.setNextRequest(null);",
+                  "} else {",
+                  "    const count = Number(pm.collectionVariables.get(\"completePollCount\") || 0) + 1;",
+                  "    pm.collectionVariables.set(\"completePollCount\", String(count));",
+                  "    if (count >= 180) {",
+                  "        pm.test(\"Arquivo pronto em até 180 consultas\", () => { throw new Error(\"Último status: \" + job.status); });",
+                  "        pm.execution.setNextRequest(null);",
+                  "    } else {",
+                  "        pm.test(\"Status de processamento válido\", () =>",
+                  "            pm.expect([\"recebendo\", \"fechando\", \"na_fila\", \"processando\"]).to.include(job.status));",
+                  "        pm.execution.setNextRequest(pm.info.requestId);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "07 Baixar XLSX pelo link",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{completeDownloadUrl}}",
+            "description": "Abre linkDownload, sem X-Api-Key. Mantenha Follow redirects ativado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Download retorna 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Conteúdo é XLSX\", () => {",
+                  "    pm.expect(pm.response.headers.get(\"Content-Type\") || \"\").to.include(\"spreadsheetml.sheet\");",
+                  "    pm.expect(Number(pm.response.headers.get(\"Content-Length\") || 1)).to.be.above(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5151",
+      "type": "string"
+    },
+    {
+      "key": "apiKey",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "simpleJobId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "simpleDownloadUrl",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "simplePollCount",
+      "value": "0",
+      "type": "string"
+    },
+    {
+      "key": "completeJobId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "completeDownloadUrl",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "completePollCount",
+      "value": "0",
+      "type": "string"
+    }
+  ]
+}

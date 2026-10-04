@@ -1,0 +1,15 @@
+**/bin
+**/obj
+**/TestResults
+.git
+.env
+.env.local
+postman/
+**/.terraform/
+infra/
+**/*.tfstate
+**/*.tfstate.*
+**/terraform.tfvars
+**/*.auto.tfvars
+**/backend.hcl
+**/*.tfplan

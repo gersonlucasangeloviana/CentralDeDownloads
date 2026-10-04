@@ -1,0 +1,13 @@
+# Copie para terraform.tfvars. Esse arquivo contém apenas escolhas, nunca senhas.
+aws_region  = "us-east-1"
+environment = "prod"
+api_domain    = "apiga.vianadev.com.br"
+portal_domain = "ga.vianadev.com.br"
+
+# Primeiro apply: somente a base; sem tasks em execução.
+deploy_app = false
+
+# Depois de validar o certificado na Cloudflare, preencher os segredos e publicar as imagens:
+# deploy_app           = true
+# portal_allowed_cidrs = ["203.0.113.10/32"]
+# image_tag            = "2026-10-03-01"
